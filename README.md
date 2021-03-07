@@ -1,0 +1,2 @@
+# GA
+code di truyen
