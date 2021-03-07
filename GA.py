@@ -10,8 +10,8 @@ class GA:
     CONDITION_STOP =  config['CONDITION_STOP'] 
     pc = config['pc']
     pm = config['pm']
-    def __init__(self , sigma , n, f):
-        self.pop = Population(size = GA.SIZE_POPULATION, sigma = sigma, n= n ,f = f)
+    def __init__(self , sigma ,  fitness):
+        self.pop = Population(size = GA.SIZE_POPULATION, sigma = sigma,f = fitness)
 
     def crossover_mutation(self):
         a = random.randint(0, GA.SIZE_POPULATION -1 )
@@ -35,5 +35,6 @@ class GA:
             self.pop.pop += child
             print(self.pop.get_best())
             self.pop.selection()
-            i +=1    
+            i +=1
+        return self.pop.get_best()    
 

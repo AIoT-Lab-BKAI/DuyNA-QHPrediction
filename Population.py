@@ -9,13 +9,14 @@ class Population:
     pc2p = config['pc2p']
     pBLX = config['pBLX']
     pAMOX = config['pAMOX']
-    def __init__(self, size, sigma, n, f):
+    sm =config['sigma']
+    def __init__(self, size, sigma, f):
         self.sigma = sigma
         self.size = size
         self.pop = []
         self.fitness = f
         for i in range(self.size):
-            ind = Individual(sigma, n)
+            ind = Individual(sigma)
             ind.value_fitness = self.fitness(ind)
             self.pop.append(ind)
         
@@ -33,7 +34,6 @@ class Population:
         return [child1, child2]
     
     
-    
     def crossover_two_point(self, parent1, parent2):
         n1 = random.randint(0,len(parent1) -1)
         n2 = random.randint(0,len(parent1) -1)
@@ -47,10 +47,10 @@ class Population:
         for i in range(0, n1):
             child1[i] = parent1[i]
             child2[i] = parent2[i]
-        for i in range(n1, n2):
+        for i in range(n1, n2+1):
             child1[i] = parent2[i]
             child2[i] = parent1[i]
-        for i in range(n2, len(parent1)):
+        for i in range(n2+1, len(parent1)):
             child1[i] = parent1[i]
             child2[i] = parent2[i]
         return [child1, child2]
@@ -60,21 +60,21 @@ class Population:
         n2 = parent2
         if n1 > n2:
             n1, n2 = n2, n1
-        alpha = (n2 - n1)/2
-        n2 += int(alpha)
-        n1 -= int(alpha)
+        alpha = int((n2 - n1)/2)
+        n2 += alpha
+        n1 -= alpha
         if n1 < 2 :
             n1 = 2
         return random.randint(n1, n2)
 
     def AMOX(self, parent1, parent2):
-        r = random.random()
-        return int( r*parent1 + (1- r)*parent2 ) 
+        alpha = random.random()
+        return int( alpha*parent1 + (1- alpha)*parent2 ) 
     
 
     def crossover(self, parent1, parent2):
-        child1 = Individual(self.sigma ,5)
-        child2 = Individual(self.sigma ,5) 
+        child1 = Individual(self.sigma)
+        child2 = Individual(self.sigma) 
         r = random.random()
         if r < Population.pc1p:
             a = self.crossover_one_point(parent1.genes, parent2.genes)
@@ -107,9 +107,10 @@ class Population:
         for i in range(len(parent1)):
             if a <= k <= a + (1-self.sigma[i], self.sigma[i])[parent1[i] == 0]:
                 child1[i] = 1 - child1[i]
-        child = Individual(self.sigma, 10)
+                break
+        child = Individual(self.sigma)
         child.set_genes(child1)
-        child.set_n(9)
+        child.set_n(int(random.gauss(ind.n, Population.sm)))
         child.value_fitness = self.fitness(child)
         return [child]
     
