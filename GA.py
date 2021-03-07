@@ -1,12 +1,15 @@
 import random
+import yaml
 from Population import Population
 
 
 class GA:
-    SIZE_POPULATION = 5
-    CONDITON_STOP =  10000
-    pc = 0.8
-    pm = 0.2
+    with open("setting.yaml", 'r') as stream:
+        config =yaml.load(stream ,Loader= yaml.FullLoader)
+    SIZE_POPULATION = config['SIZE_POPULATION']
+    CONDITION_STOP =  config['CONDITION_STOP'] 
+    pc = config['pc']
+    pm = config['pm']
     def __init__(self , sigma , n, f):
         self.pop = Population(size = GA.SIZE_POPULATION, sigma = sigma, n= n ,f = f)
 
@@ -24,8 +27,8 @@ class GA:
             return self.pop.mutation(ind1) + self.pop.mutation(ind2)
 
     def run(self):
-        i = 1
-        while i < GA.CONDITON_STOP:
+        i = 0
+        while i < GA.CONDITION_STOP:
             child = []
             while len(child) < GA.SIZE_POPULATION:
                        child += self.crossover_mutation()

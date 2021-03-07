@@ -1,11 +1,14 @@
 import random
+import yaml
 from Individual import Individual
 
 class Population:
-    pc1p = 0.5
-    pc2p = 0.5
-    pBLX = 0.5
-    pAMOX = 0.5
+    with open("setting.yaml", 'r') as stream:
+        config =yaml.load(stream ,Loader= yaml.FullLoader)
+    pc1p = config['pc1p']
+    pc2p = config['pc2p']
+    pBLX = config['pBLX']
+    pAMOX = config['pAMOX']
     def __init__(self, size, sigma, n, f):
         self.sigma = sigma
         self.size = size
@@ -57,7 +60,7 @@ class Population:
         n2 = parent2
         if n1 > n2:
             n1, n2 = n2, n1
-        alpha = (n2 -n1)/2
+        alpha = (n2 - n1)/2
         n2 += int(alpha)
         n1 -= int(alpha)
         if n1 < 2 :
@@ -106,7 +109,7 @@ class Population:
                 child1[i] = 1 - child1[i]
         child = Individual(self.sigma, 10)
         child.set_genes(child1)
-        child.set_n(1)
+        child.set_n(9)
         child.value_fitness = self.fitness(child)
         return [child]
     
