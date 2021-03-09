@@ -4,13 +4,19 @@ class Individual:
     with open("setting.yaml", 'r') as stream:
         config =yaml.load(stream ,Loader= yaml.FullLoader)
     n = config['n']
-    
+    pi= config['pi']
+    psm = config['psm']
     def __init__(self, sigma):
         self.size = len(sigma)
         self.genes = [0] * self.size
-        for i in range(self.size):
-            if random.random() < sigma[i] :
-                self.genes[i] = 1
+        if random.random() < Individual.pi:
+            for i in range(self.size):
+                if random.random() < 0.5:
+                    self.genes[i] = 1
+        else:
+            for i in range(self.size):
+                if random.random() < sigma[i] :
+                    self.genes[i] = 1
         self.n = random.randint(2, Individual.n) 
         self.value_fitness = 0
 

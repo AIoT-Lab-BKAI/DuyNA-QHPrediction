@@ -2,7 +2,10 @@
 SIZE_POPULATION: 100
 CONDITION_STOP: 300
 
+#khoitao
 n: 4 #gia tri khoi tao cua so model con cua ensemble trong khoang [2,n]
+pi: 0.5 #khoi tao ngau nhien 
+psm: 0.5 #khoi tao theo xac xuat sigma
 
 
 # lai ghep dot bien
