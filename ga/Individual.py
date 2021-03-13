@@ -1,7 +1,7 @@
 import random
 import yaml
 class Individual:
-    with open("setting.yaml", 'r') as stream:
+    with open("settings/ga/setting.yaml", 'r') as stream:
         config =yaml.load(stream ,Loader= yaml.FullLoader)
     n = config['n']
     pi= config['pi']

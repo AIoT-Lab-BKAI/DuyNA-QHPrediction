@@ -12,7 +12,7 @@ psm: 0.5 #khoi tao theo xac xuat sigma
 pm: 0.2 #xac xuat dot bien
 pc: 0.8 #xac xuat lai ghep
 
-#xac lai ghep cho ssa 
+#xac suat lai ghep cho ssa 
 pc1p: 0.4 #xac xuat lai 1 diem cat
 pc2p: 0.6 #xac xuat lai 2 diem cat
 

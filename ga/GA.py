@@ -1,11 +1,10 @@
 import random
 import yaml
-from Population import Population
-
+from ga.Population import Population
 
 class GA:
-    with open("setting.yaml", 'r') as stream:
-        config =yaml.load(stream ,Loader= yaml.FullLoader)
+    with open("settings/ga/setting.yaml", 'r') as stream:
+        config =yaml.load(stream ,Loader=  yaml.FullLoader)
     SIZE_POPULATION = config['SIZE_POPULATION']
     CONDITION_STOP =  config['CONDITION_STOP'] 
     pc = config['pc']

@@ -1,9 +1,9 @@
 import random
 import yaml
-from Individual import Individual
+from ga.Individual import Individual
 
 class Population:
-    with open("setting.yaml", 'r') as stream:
+    with open("settings/ga/setting.yaml", 'r') as stream:
         config =yaml.load(stream ,Loader= yaml.FullLoader)
     pc1p = config['pc1p']
     pc2p = config['pc2p']
