@@ -41,7 +41,7 @@ def calcError(row):
 
 
 class Ensemble:
-    def __init__(self, mode, model_kind, **kwargs):
+    def __init__(self, mode, model_kind, sigma_lst=[1,2,3], default_n=20, epoch_num=2, epoch_min=100, epoch_step=50,**kwargs):
         self.mode = mode
         self.model_kind = model_kind
 
@@ -61,10 +61,10 @@ class Ensemble:
         self.norm_method = self._data_kwargs.get('norm_method')
 
         self.batch_size = self._model_kwargs.get('batch_size')
-        self.epoch_min = self._model_kwargs.get('epoch_min')
+        self.epoch_min = epoch_min
         self.epoch_max = self._model_kwargs.get('epoch_max')
-        self.epoch_num = self._model_kwargs.get('epoch_num')
-        self.epoch_step = self._model_kwargs.get('epoch_step')
+        self.epoch_num  =  epoch_num
+        self.epoch_step =  epoch_step
         self.epochs_out = self._model_kwargs.get('epochs_out')
         self.input_dim = self._model_kwargs.get('in_dim')
         self.output_dim = self._model_kwargs.get('out_dim')
@@ -72,8 +72,8 @@ class Ensemble:
         self.dropout = self._model_kwargs.get('dropout')
 
 
-        self.sigma_lst = self._ssa_kwargs.get('sigma_lst')
-        self.default_n = self._ssa_kwargs.get('default_n')
+        self.sigma_lst = sigma_lst
+        self.default_n = default_n
 
         self.data = self.generate_data()
         self.inner_model = self.build_model_inner()
@@ -181,7 +181,7 @@ class Ensemble:
         if (self.mode == 'train' or self.mode == 'train-inner'):
             from model.models.en_de import train_model as ed_train
             for epoch in lst_epoch_size:
-            # for epoch in range(self.epoch_min, self.epoch_max + 1, self.epoch_step):
+                # for epoch in range(self.epoch_min, self.epoch_max + 1, self.epoch_step):
                 self.inner_model.load_weights(self.log_dir + 'ModelPool/init_model.hdf5')
 
                 if self.model_kind == 'rnn_cnn':
@@ -211,7 +211,7 @@ class Ensemble:
                 j += 1
         else:
             for epoch in lst_epoch_size:
-            # for epoch in range(self.epoch_min, self.epoch_max + 1, self.epoch_step):
+                # for epoch in range(self.epoch_min, self.epoch_max + 1, self.epoch_step):
                 if self.model_kind == 'rnn_cnn':
                     self.inner_model.load_weights(self.log_dir + f'ModelPool/best_model_{epoch}.hdf5')
                     train, test = self.predict_in()
@@ -262,26 +262,12 @@ class Ensemble:
 
     #TODO: change to multiple timestep
     def build_model_outer(self):
-        #from sklearn.svm import SVR
-
-
-        # model = SVR(kernel='poly',C=1.0,epsilon=0.1)
-
         self.train_model_inner()
         in_shape = self.data['x_train_out'].shape
         print(f'Input shape: {in_shape}')
-        #print(self.data['x_train_out'][:3])
-        #print(self.data['x_train_out'].head())
 
         input_submodel = Input(shape=(self.target_timestep, self.output_dim * self.data['sub_model']))
         input_val_x = Input(shape=(self.window_size, self.input_dim))
-
-        # conv = Conv1D(filters=16,kernel_size=2,strides=1,padding='same')
-        # conv_out = conv(input_val_x)
-        # conv_2 = Conv1D(filters=32,kernel_size=3,padding='same')
-        # conv_out_2 = conv_2(conv_out)
-        # conv_3 = Conv1D(filters=64,kernel_size=4,padding='same')
-        # conv_out_3 = conv_3(conv_out_2)
 
         rnn_1 = Bidirectional(
             LSTM(units=64,
@@ -521,13 +507,13 @@ if __name__ == '__main__':
     with open('./settings/model/config.yaml', 'r') as f:
         config = yaml.load(f, Loader=yaml.FullLoader)
     if args.mode == 'train' or args.mode == 'train-inner' or args.mode == 'train-outer':
-        model = Ensemble(args.mode, args.model, **config)
+        model = Ensemble(args.mode, args.model,sigma_lst=[1,2,3], default_n=20, epoch_num=4, epoch_min=100, epoch_step=50, **config)
         model.train_model_outer()
         #model.roll_prediction()
         # model.retransform_prediction()
         # model.evaluate_model()
     elif args.mode == "test":
-        model = Ensemble(args.mode, args.model, **config)
+        model = Ensemble(args.mode, args.model,sigma_lst=[1,2,3], default_n=20, epoch_num=4, epoch_min=100, epoch_step=50, **config)
         model.train_model_outer()
         #model.roll_prediction()
         model.retransform_prediction(mode='roll')
