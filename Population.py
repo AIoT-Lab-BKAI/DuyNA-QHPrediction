@@ -9,7 +9,8 @@ class Population:
     pc2p = config['pc2p']
     pBLX = config['pBLX']
     pAMOX = config['pAMOX']
-    sm =config['sigma']
+    sm = config['sigma']
+    pmx = config['pmx']
     def __init__(self, size, sigma, f):
         self.sigma = sigma
         self.size = size
@@ -99,15 +100,20 @@ class Population:
     def mutation(self, ind):
         parent1 = ind.genes
         child1 = [ i for i in parent1]
-        s = 0
-        for i in range(len(parent1)):
-            s += (1-self.sigma[i], self.sigma[i])[parent1[i] == 0] 
-        k = random.random()*s
-        a =0
-        for i in range(len(parent1)):
-            if a <= k <= a + (1-self.sigma[i], self.sigma[i])[parent1[i] == 0]:
-                child1[i] = 1 - child1[i]
-                break
+        if random.random() < Population.pmx:
+            s = 0
+            for i in range(len(parent1)):
+                s += (1-self.sigma[i], self.sigma[i])[parent1[i] == 0] 
+            k = random.random()*s
+            a =0
+            for i in range(len(parent1)):
+                if a <= k <= a + (1-self.sigma[i], self.sigma[i])[parent1[i] == 0]:
+                    child1[i] = 1 - child1[i]
+                    break
+                a += (1-self.sigma[i], self.sigma[i])[parent1[i] == 0]
+        else :
+            k = random.randint(0 ,len(parent1)-1)
+            child1[k] = 1 - child1[k]
         child = Individual(self.sigma)
         child.set_genes(child1)
         child.set_n(int(random.gauss(ind.n, Population.sm)))

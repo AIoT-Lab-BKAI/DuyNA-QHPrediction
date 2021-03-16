@@ -6,6 +6,7 @@ class Individual:
     n = config['n']
     pi= config['pi']
     psm = config['psm']
+    nmax = config['nmax']
     def __init__(self, sigma):
         self.size = len(sigma)
         self.genes = [0] * self.size
@@ -39,3 +40,6 @@ class Individual:
         self.n = n
         if self.n<2:
             self.n = 2
+        if self.n > Individual.nmax:
+            self.n = Individual.nmax
+        
