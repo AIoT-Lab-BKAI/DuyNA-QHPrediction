@@ -1,7 +1,6 @@
 import pandas as pd
 import numpy as np
 
-
 def normalize_data(dataframe, mode):
     if mode == 'abs':
         from sklearn.preprocessing import MaxAbsScaler
