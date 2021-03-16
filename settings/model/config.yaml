@@ -5,18 +5,19 @@ data:
   split_point_inner: 0.4
   norm_method: min_max
   cols_x:
-    - 3
-    - 2
+    - 0
+    - 1
   cols_y:
-    - 3
-    - 2
+    - 0
+    - 1
   cols_gt:
-    - 3
-    - 2
+    - 0
+    - 1
   window_size: 30
   target_timestep: 1
 model:
   epoch_min: 100
+  epoch_num: 4
   epoch_max: 250
   epoch_step: 50
   epochs_out: 400
@@ -25,3 +26,7 @@ model:
   patience: 100
   batch_size: 128
   dropout: 0
+
+ssa:
+  default_n: 20 # default window size
+  sigma_lst: [1,2,3] #default_sigma_lst

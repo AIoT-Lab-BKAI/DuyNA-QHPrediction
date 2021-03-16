@@ -11,22 +11,8 @@ import yaml
 import keras.backend as K
 from utils.ssa import SSA
 from utils.reprocess_daily import extract_data, ed_extract_data, roll_data
-
-def getSSAData(data_file, lengthN, sigma_lst):
-    dat = pd.read_csv(data_file, header=0, index_col=0)
-    Q = dat['Q'].to_list()
-    H = dat['H'].to_list()
-
-    H_ssa_ = SSA(H, lengthN)
-    Q_ssa_ = SSA(Q, lengthN)
-
-    H_ssa = H_ssa_.reconstruct(sigma_lst)
-    dat['H_ssa'] = H_ssa
-
-    Q_ssa = Q_ssa_.reconstruct(sigma_lst)
-    dat['Q_ssa'] = Q_ssa
-
-    return dat
+from utils.data_loader import get_input_data
+from utils.epoch_size_tuning import get_epoch_size_list
 
 def getMonth(_str):
     return _str.split('/')[1]
@@ -62,6 +48,7 @@ class Ensemble:
         self.log_dir = kwargs.get('log_dir')
         self._data_kwargs = kwargs.get('data')
         self._model_kwargs = kwargs.get('model')
+        self._ssa_kwargs = kwargs.get('ssa')
 
         self.data_file = self._data_kwargs.get('data_file')
         self.dt_split_point_outer = self._data_kwargs.get('split_point_outer')
@@ -76,6 +63,7 @@ class Ensemble:
         self.batch_size = self._model_kwargs.get('batch_size')
         self.epoch_min = self._model_kwargs.get('epoch_min')
         self.epoch_max = self._model_kwargs.get('epoch_max')
+        self.epoch_num = self._model_kwargs.get('epoch_num')
         self.epoch_step = self._model_kwargs.get('epoch_step')
         self.epochs_out = self._model_kwargs.get('epochs_out')
         self.input_dim = self._model_kwargs.get('in_dim')
@@ -83,12 +71,17 @@ class Ensemble:
         self.patience = self._model_kwargs.get('patience')
         self.dropout = self._model_kwargs.get('dropout')
 
+
+        self.sigma_lst = self._ssa_kwargs.get('sigma_lst')
+        self.default_n = self._ssa_kwargs.get('default_n')
+
         self.data = self.generate_data()
         self.inner_model = self.build_model_inner()
         self.outer_model = self.build_model_outer()
 
+
     def generate_data(self, true_t_timestep=1):
-        dat = pd.read_csv(self.data_file, header=0, index_col=0)
+        dat = get_input_data(self.data_file, self.default_n, self.sigma_lst )
         # dat = getSSAData(self.data_file, 20, [1,2,3]) # thay doi trong config
         #dat_q = pd.read_csv('./RawData/Kontum-daily.csv', header=0, index_col=0)
         #gen_dat = gen_dat.to_numpy()
@@ -182,10 +175,13 @@ class Ensemble:
         x_test_out = np.zeros(shape=(test_shape[0], self.target_timestep, step, test_shape[1]))
         j = 0  #submodel index
 
+        lst_epoch_size= get_epoch_size_list(self.epoch_num, self.epoch_min, self.epoch_step)
+
+
         if (self.mode == 'train' or self.mode == 'train-inner'):
             from model.models.en_de import train_model as ed_train
-
-            for epoch in range(self.epoch_min, self.epoch_max + 1, self.epoch_step):
+            for epoch in lst_epoch_size:
+            # for epoch in range(self.epoch_min, self.epoch_max + 1, self.epoch_step):
                 self.inner_model.load_weights(self.log_dir + 'ModelPool/init_model.hdf5')
 
                 if self.model_kind == 'rnn_cnn':
@@ -214,7 +210,8 @@ class Ensemble:
                     x_test_out[:, i, j, :] = test[:, :]
                 j += 1
         else:
-            for epoch in range(self.epoch_min, self.epoch_max + 1, self.epoch_step):
+            for epoch in lst_epoch_size:
+            # for epoch in range(self.epoch_min, self.epoch_max + 1, self.epoch_step):
                 if self.model_kind == 'rnn_cnn':
                     self.inner_model.load_weights(self.log_dir + f'ModelPool/best_model_{epoch}.hdf5')
                     train, test = self.predict_in()
