@@ -2,27 +2,31 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
-from keras.layers import Dense, Input, Bidirectional, LSTM, Reshape, Concatenate, Conv1D, TimeDistributed
-from keras.models import Model
+from tensorflow.keras.layers import Dense, Input, Bidirectional, LSTM, Reshape, Concatenate, Conv1D, TimeDistributed
+from tensorflow.keras.models import Model
 import sys
 import os
 import argparse
 import yaml
-import keras.backend as K
+import tensorflow.keras.backend as K
 from utils.ssa import SSA
 from utils.reprocess_daily import extract_data, ed_extract_data, roll_data
 from utils.data_loader import get_input_data
 from utils.epoch_size_tuning import get_epoch_size_list
 
+
 def getMonth(_str):
     return _str.split('/')[1]
+
 
 def getYear(_str):
     return _str.split('/')[2]
 
+
 def mean_absolute_percentage_error(y_true, y_pred):
     y_true, y_pred = np.array(y_true), np.array(y_pred)
     return np.mean(np.abs((y_true - y_pred) / y_true)) * 100
+
 
 def calcError(row):
     item_df = {}
@@ -41,7 +45,7 @@ def calcError(row):
 
 
 class Ensemble:
-    def __init__(self, mode, model_kind, sigma_lst=[1,2,3], default_n=20, epoch_num=2, epoch_min=100, epoch_step=50,**kwargs):
+    def __init__(self, mode, model_kind, sigma_lst=[1, 2, 3], default_n=20, epoch_num=2, epoch_min=100, epoch_step=50, **kwargs):
         self.mode = mode
         self.model_kind = model_kind
 
@@ -63,14 +67,13 @@ class Ensemble:
         self.batch_size = self._model_kwargs.get('batch_size')
         self.epoch_min = epoch_min
         self.epoch_max = self._model_kwargs.get('epoch_max')
-        self.epoch_num  =  epoch_num
-        self.epoch_step =  epoch_step
+        self.epoch_num = epoch_num
+        self.epoch_step = epoch_step
         self.epochs_out = self._model_kwargs.get('epochs_out')
         self.input_dim = self._model_kwargs.get('in_dim')
         self.output_dim = self._model_kwargs.get('out_dim')
         self.patience = self._model_kwargs.get('patience')
         self.dropout = self._model_kwargs.get('dropout')
-
 
         self.sigma_lst = sigma_lst
         self.default_n = default_n
@@ -79,9 +82,8 @@ class Ensemble:
         self.inner_model = self.build_model_inner()
         self.outer_model = self.build_model_outer()
 
-
     def generate_data(self, true_t_timestep=1):
-        dat = get_input_data(self.data_file, self.default_n, self.sigma_lst )
+        dat = get_input_data(self.data_file, self.default_n, self.sigma_lst)
         # dat = getSSAData(self.data_file, 20, [1,2,3]) # thay doi trong config
         #dat_q = pd.read_csv('./RawData/Kontum-daily.csv', header=0, index_col=0)
         #gen_dat = gen_dat.to_numpy()
@@ -115,7 +117,7 @@ class Ensemble:
 
             x_train_in, y_train_in, y_gt_train_in = x[:train_inner, :], y[:train_inner, :], y_gt[:train_inner, :]
             x_test_in, y_test_in, y_gt_test_in = x[train_inner:-test_outer, :], y[train_inner:-test_outer, :], y_gt[
-                                                                                                               train_inner:-test_outer, :]
+                train_inner:-test_outer, :]
             x_test_out, y_test_out, y_gt_test_out = x[-test_outer:, :], y[-test_outer:, :], y_gt[-test_outer:, :]
 
             for cat in ["train_in", "test_in", "test_out"]:
@@ -137,9 +139,9 @@ class Ensemble:
                                                                                    train_inner, :], de_y[:
                                                                                                          train_inner, :]
             en_x_test_in, de_x_test_in, y_test_in = en_x[train_inner:-test_outer, :], de_x[
-                                                                                      train_inner:-test_outer, :], de_y[train_inner:-test_outer, :]
+                train_inner:-test_outer, :], de_y[train_inner:-test_outer, :]
             en_x_test_out, de_x_test_out, y_test_out = en_x[-test_outer:, :], de_x[-test_outer:, :], de_y[
-                                                                                                     -test_outer:, :]
+                -test_outer:, :]
 
             for cat in ["train_in", "test_in", "test_out"]:
                 en_x, de_x, de_y = locals()["en_x_" + cat], locals()["de_x_" + cat], locals()["y_" + cat]
@@ -166,17 +168,16 @@ class Ensemble:
     def train_model_inner(self):
         train_shape = self.data['y_test_in'].shape
         test_shape = self.data['y_test_out'].shape
-        #print(train_shape)
-        #print(test_shape)
+        # print(train_shape)
+        # print(test_shape)
         step = int((self.epoch_max - self.epoch_min) / self.epoch_step) + 1
         self.data['sub_model'] = step
 
         x_train_out = np.zeros(shape=(train_shape[0], self.target_timestep, step, train_shape[1]))
         x_test_out = np.zeros(shape=(test_shape[0], self.target_timestep, step, test_shape[1]))
-        j = 0  #submodel index
+        j = 0  # submodel index
 
-        lst_epoch_size= get_epoch_size_list(self.epoch_num, self.epoch_min, self.epoch_step)
-
+        lst_epoch_size = get_epoch_size_list(self.epoch_num, self.epoch_min, self.epoch_step)
 
         if (self.mode == 'train' or self.mode == 'train-inner'):
             from model.models.en_de import train_model as ed_train
@@ -255,12 +256,12 @@ class Ensemble:
         shape = x_train_out.shape
         self.data['x_train_out'] = x_train_out.reshape(shape[0], shape[1], -1)
         print(self.data['x_train_out'].shape)
-        self.data['y_train_out'] = self.data['y_test_in']  #.reshape(-3,self.target_timestep * self.output_dim)
+        self.data['y_train_out'] = self.data['y_test_in']  # .reshape(-3,self.target_timestep * self.output_dim)
         shape = x_test_out.shape
         self.data['x_test_out_submodel'] = x_test_out.reshape(shape[0], shape[1], -1)
-        self.data['y_test_out'] = self.data['y_test_out']  #.reshape(-3,self.target_timestep * self.output_dim)
+        self.data['y_test_out'] = self.data['y_test_out']  # .reshape(-3,self.target_timestep * self.output_dim)
 
-    #TODO: change to multiple timestep
+    # TODO: change to multiple timestep
     def build_model_outer(self):
         self.train_model_inner()
         in_shape = self.data['x_train_out'].shape
@@ -295,7 +296,7 @@ class Ensemble:
 
     def train_model_outer(self):
         if (self.mode == 'train' or self.mode == 'train-outer'):
-            from keras.callbacks import EarlyStopping, ModelCheckpoint
+            from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
 
             callbacks = []
             #lr_schedule = LearningRateScheduler(lambda epoch: 1e-8 * 10**(epoch / 20))
@@ -305,7 +306,7 @@ class Ensemble:
                                          verbose=1,
                                          save_best_only=True)
 
-            #callbacks.append(lr_schedule)
+            # callbacks.append(lr_schedule)
             callbacks.append(early_stop)
             callbacks.append(checkpoint)
 
@@ -338,7 +339,7 @@ class Ensemble:
 
     def plot_training_history(self, history):
         fig = plt.figure(figsize=(10, 6))
-        #fig.add_subplot(121)
+        # fig.add_subplot(121)
         plt.plot(history.history['loss'], label='loss')
         plt.plot(history.history['val_loss'], label='val_loss')
         plt.legend()
@@ -482,6 +483,8 @@ class Ensemble:
         with open(self.log_dir + 'evaluate_score_total.txt', 'a') as f:
             f.write(_str)
 
+        return (np.mean(eval_df["var_score_q"].tolist()), np.mean(eval_df["var_score_h"].tolist()))
+
     def evaluate_model_by_month(self):
         df = pd.read_csv('./log/data_analysis/predict_val_{}.csv'.format(0))
         df['month'] = df['date'].apply(getMonth)
@@ -491,6 +494,7 @@ class Ensemble:
         item_df = df.groupby(['month', 'year'], as_index=False).apply(calcError)
 
         item_df.to_csv('./log/data_analysis/total_error_monthly.csv')
+
 
 if __name__ == '__main__':
     K.clear_session()
@@ -507,15 +511,17 @@ if __name__ == '__main__':
     with open('./settings/model/config.yaml', 'r') as f:
         config = yaml.load(f, Loader=yaml.FullLoader)
     if args.mode == 'train' or args.mode == 'train-inner' or args.mode == 'train-outer':
-        model = Ensemble(args.mode, args.model,sigma_lst=[1,2,3], default_n=20, epoch_num=4, epoch_min=100, epoch_step=50, **config)
+        model = Ensemble(args.mode, args.model, sigma_lst=[
+                         1, 2, 3], default_n=20, epoch_num=4, epoch_min=100, epoch_step=50, **config)
         model.train_model_outer()
-        #model.roll_prediction()
+        # model.roll_prediction()
         # model.retransform_prediction()
         # model.evaluate_model()
     elif args.mode == "test":
-        model = Ensemble(args.mode, args.model,sigma_lst=[1,2,3], default_n=20, epoch_num=4, epoch_min=100, epoch_step=50, **config)
+        model = Ensemble(args.mode, args.model, sigma_lst=[
+                         1, 2, 3], default_n=20, epoch_num=4, epoch_min=100, epoch_step=50, **config)
         model.train_model_outer()
-        #model.roll_prediction()
+        # model.roll_prediction()
         model.retransform_prediction(mode='roll')
         model.evaluate_model(mode='roll')
         # model.evaluate_model_by_month()
