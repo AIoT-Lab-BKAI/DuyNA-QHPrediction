@@ -10,6 +10,7 @@ class Population:
     pBLX = config['pBLX']
     pAMOX = config['pAMOX']
     sm =config['sigma']
+    pmx = config['pmx']
     def __init__(self, size, sigma, f):
         self.sigma = sigma
         self.size = size

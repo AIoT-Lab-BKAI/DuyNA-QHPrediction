@@ -70,7 +70,7 @@ if __name__ == '__main__':
     for i in q:
         sigma.append(i/sumq)
     pop = GA(sigma, fitness)
-    pop.run()
+    # pop.run()
    
     
 
