@@ -22,9 +22,9 @@ def get_list_sigma_result(default_n=20):
 
     lst_sigma_H = H_ssa_L20.get_lst_sigma()
     lst_sigma_Q = Q_ssa_L20.get_lst_sigma()
-    return  lst_sigma_H, lst_sigma_Q
+    return  lst_sigma_Q
 
-def reward_func(sigma_lst=[1, 2, 3], default_n=20, epoch_num=4, epoch_min=100, epoch_step=50):
+def reward_func(sigma_index_lst=[1, 2, 3], default_n=20, epoch_num=4, epoch_min=100, epoch_step=50):
     '''
     input
     sigma_lst - The component index from the ssa gene for example the gen [0, 1, 0] -> sigma_lst=[1] #the index where gen=1
@@ -41,12 +41,12 @@ def reward_func(sigma_lst=[1, 2, 3], default_n=20, epoch_num=4, epoch_min=100, e
     with open('./settings/model/config.yaml', 'r') as f:
         config = yaml.load(f, Loader=yaml.FullLoader)
     # train
-    model = Ensemble(mode='train', model_kind='rnn_cnn', sigma_lst=sigma_lst,
+    model = Ensemble(mode='train', model_kind='rnn_cnn', sigma_lst=sigma_index_lst,
                      default_n=default_n, epoch_num=epoch_num, epoch_min=epoch_min, epoch_step=epoch_step, **config)
     model.train_model_outer()
 
     # test
-    model = Ensemble(mode='test', model_kind='rnn_cnn', sigma_lst=sigma_lst,
+    model = Ensemble(mode='test', model_kind='rnn_cnn', sigma_lst=sigma_index_lst,
                      default_n=default_n, epoch_num=epoch_num, epoch_min=epoch_min, epoch_step=epoch_step, **config)
     model.train_model_outer()
     model.retransform_prediction(mode='roll')
@@ -54,6 +54,6 @@ def reward_func(sigma_lst=[1, 2, 3], default_n=20, epoch_num=4, epoch_min=100, e
 
 
 if __name__ == '__main__':
-    h, q = get_list_sigma_result()
+    q = get_list_sigma_result()
     print(h)
     print(q)
