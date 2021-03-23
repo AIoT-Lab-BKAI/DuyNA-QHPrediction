@@ -6,6 +6,8 @@ from utils.data_loader import get_input_data
 from utils.ssa import SSA
 import pandas as pd
 
+
+
 if sys.version_info[0] < 3:
     raise Exception("Python 3 or a more recent version is required.")
 
@@ -24,7 +26,7 @@ def get_list_sigma_result(default_n=20):
     lst_sigma_Q = Q_ssa_L20.get_lst_sigma()
     return  lst_sigma_Q
 
-def reward_func(sigma_index_lst=[1, 2, 3], default_n=20, epoch_num=4, epoch_min=100, epoch_step=50):
+def reward_func(sigma_index_lst=[1, 2, 3], default_n=20, epoch_num=1, epoch_min=1, epoch_step=50):
     '''
     input
     sigma_lst - The component index from the ssa gene for example the gen [0, 1, 0] -> sigma_lst=[1] #the index where gen=1
@@ -54,8 +56,8 @@ def reward_func(sigma_index_lst=[1, 2, 3], default_n=20, epoch_num=4, epoch_min=
 
 
 if __name__ == '__main__':
-    q = get_list_sigma_result()
-    print(q)
+    # q = get_list_sigma_result()
+    print(reward_func())
 
 
-# test
+# test2
