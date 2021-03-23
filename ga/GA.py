@@ -2,9 +2,6 @@ import random
 import yaml
 from ga.Population import Population
 
-f0 = open("log/ga/init.txt", 'w')
-f1 = open("log/ga/run.txt", 'w+')
-
 
 class GA:
     with open("settings/ga/setting.yaml", 'r') as stream:
@@ -14,6 +11,7 @@ class GA:
     pc = config['pc']
     pm = config['pm']
     def __init__(self , sigma ,  fitness):
+        f0 = open("log/ga/init.txt", 'w')
         f0.write("Hello")
         self.pop = Population(size = GA.SIZE_POPULATION, sigma = sigma,f = fitness)
         for ind in self.pop.pop:
@@ -35,6 +33,7 @@ class GA:
             return self.pop.mutation(ind1) + self.pop.mutation(ind2)
 
     def run(self):
+        f1 = open("log/ga/run.txt", 'w+')
         i = 0
         while i < GA.CONDITION_STOP:
             child = []
