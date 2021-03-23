@@ -55,5 +55,4 @@ def reward_func(sigma_index_lst=[1, 2, 3], default_n=20, epoch_num=4, epoch_min=
 
 if __name__ == '__main__':
     q = get_list_sigma_result()
-    print(h)
     print(q)
