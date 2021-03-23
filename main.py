@@ -67,12 +67,13 @@ if __name__ == '__main__':
     q = get_list_sigma_result()
     sumq = sum(q)
     sigma = []
-    for i in range(q):
+    for i in q:
         sigma.append(i/sumq)
     pop = GA(sigma, fitness)
     pop.run()
-   
+    
     print(sigma)
+   
 
 
 # test2
