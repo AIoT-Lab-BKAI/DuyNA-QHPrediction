@@ -6,6 +6,7 @@ from utils.data_loader import get_input_data
 from utils.ssa import SSA
 import pandas as pd
 from ga.GA import GA
+from ga.Individual import Individual
 import numpy as np
 
 if sys.version_info[0] < 3:
@@ -26,7 +27,7 @@ def get_list_sigma_result(default_n=20):
     lst_sigma_Q = Q_ssa_L20.get_lst_sigma()
     return  lst_sigma_Q
 
-def reward_func(sigma_index_lst=[1, 2, 3], default_n=20, epoch_num=1, epoch_min=1, epoch_step=50):
+def reward_func(sigma_index_lst=[1, 2, 3], default_n=20, epoch_num=4, epoch_min=100, epoch_step=50):
     '''
     input
     sigma_lst - The component index from the ssa gene for example the gen [0, 1, 0] -> sigma_lst=[1] #the index where gen=1
@@ -54,16 +55,23 @@ def reward_func(sigma_index_lst=[1, 2, 3], default_n=20, epoch_num=1, epoch_min=
     model.retransform_prediction(mode='roll')
     return model.evaluate_model(mode='roll')
 
+def fitness(ind):
+    sigma_index_lst =[]
+    for i in range(ind.size):
+        if ind.genes[i]==1:
+            sigma_index_lst.append(i)
+    return reward_func(sigma_index_lst=sigma_index_lst, epoch_num= ind.n)[0]
+
 
 if __name__ == '__main__':
     q = get_list_sigma_result()
     sumq = sum(q)
-    sigma = (q/sumq)
-    #print(reward_func())
+    sigma = []
+    for i in range(q):
+        sigma.append(i/sumq)
     pop = GA(sigma, fitness)
-    # pop.run()
-    print(q)
-    print(sumq)
+    pop.run()
+   
     print(sigma)
 
 
