@@ -145,24 +145,29 @@ class SSA(object):
         plt.xlim(min - 0.5, max_rnge + 0.5)
         plt.ylim(max_rnge + 0.5, min - 0.5)
 
+    def get_lst_sigma(self):
+        return self.Sigma
 
 if __name__=="__main__":
-    data_file = "../RawData/Kontum-daily.csv"
-    data_out ="../RawData/output.txt"
+    data_file = "../data/SonTay.csv"
+    # data_out ="../RawData/output.txt"
     df = pd.read_csv(data_file)
 
-    Q = df['discharge'].to_list()
-    H = df['water_level'].to_list()
+    Q = df['Q'].to_list()
+    H = df['H'].to_list()
 
     H_ssa_L20 = SSA(H, 20)
     Q_ssa_L20 = SSA(Q, 20)
 
-    H_ssa = H_ssa_L20.reconstruct([0,1,2,3])
-    df['water_level_modified'] = H_ssa
+    lst_sigma = H_ssa_L20.get_lst_sigma()
 
-    Q_ssa = Q_ssa_L20.reconstruct([0,1,2,3,4,5,6,7,8,9,10,11,12])
-    df['discharge_modified'] = Q_ssa
+    print(lst_sigma)
+    # H_ssa = H_ssa_L20.reconstruct([0,1,2,3])
+    # df['water_level_modified'] = H_ssa
 
-    df_ = df[['time','discharge', 'water_level', 'discharge_modified', 'water_level_modified']]
-    df_.to_csv('../RawData/Kontum_modified.csv', index=False)
+    # Q_ssa = Q_ssa_L20.reconstruct([0,1,2,3,4,5,6,7,8,9,10,11,12])
+    # df['discharge_modified'] = Q_ssa
+
+    # df_ = df[['time','discharge', 'water_level', 'discharge_modified', 'water_level_modified']]
+    # df_.to_csv('../RawData/Kontum_modified.csv', index=False)
 

@@ -1,15 +1,30 @@
 import sys
+from ensemble import Ensemble
+import yaml
+import tensorflow.keras.backend as K
+from utils.data_loader import get_input_data
+from utils.ssa import SSA
+import pandas as pd
 
 if sys.version_info[0] < 3:
     raise Exception("Python 3 or a more recent version is required.")
 
-from ensemble import Ensemble
-import yaml
-import tensorflow.keras.backend as K
+def get_list_sigma_result(default_n=20):
+    with open('./settings/model/config.yaml', 'r') as f:
+        config = yaml.load(f, Loader=yaml.FullLoader)
 
+    data_file = config['data']['data_file']
+    df = pd.read_csv(data_file)
+    Q = df['Q'].to_list()
+    H = df['H'].to_list()
+    H_ssa_L20 = SSA(H, default_n)
+    Q_ssa_L20 = SSA(Q, default_n)
 
-def reward_func(sigma_lst=[
-        1, 2, 3], default_n=20, epoch_num=4, epoch_min=100, epoch_step=50):
+    lst_sigma_H = H_ssa_L20.get_lst_sigma()
+    lst_sigma_Q = Q_ssa_L20.get_lst_sigma()
+    return  lst_sigma_H, lst_sigma_Q
+
+def reward_func(sigma_lst=[1, 2, 3], default_n=20, epoch_num=4, epoch_min=100, epoch_step=50):
     '''
     input
     sigma_lst - The component index from the ssa gene for example the gen [0, 1, 0] -> sigma_lst=[1] #the index where gen=1
@@ -39,4 +54,6 @@ def reward_func(sigma_lst=[
 
 
 if __name__ == '__main__':
-    reward_func()
+    h, q = get_list_sigma_result()
+    print(h)
+    print(q)
