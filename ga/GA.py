@@ -13,6 +13,7 @@ class GA:
     def __init__(self , sigma ,  fitness):
         f0 = open("log/ga/init.txt", 'w')
         f0.write("Hello")
+        print("hello>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
         self.pop = Population(size = GA.SIZE_POPULATION, sigma = sigma,f = fitness)
         for ind in self.pop.pop:
             f0.write(ind)
