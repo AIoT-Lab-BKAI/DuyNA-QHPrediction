@@ -5,8 +5,8 @@ import tensorflow.keras.backend as K
 from utils.data_loader import get_input_data
 from utils.ssa import SSA
 import pandas as pd
-
-
+from ga.GA import GA
+import numpy as np
 
 if sys.version_info[0] < 3:
     raise Exception("Python 3 or a more recent version is required.")
@@ -56,8 +56,15 @@ def reward_func(sigma_index_lst=[1, 2, 3], default_n=20, epoch_num=1, epoch_min=
 
 
 if __name__ == '__main__':
-    # q = get_list_sigma_result()
-    print(reward_func())
+    q = get_list_sigma_result()
+    sumq = sum(q)
+    sigma = (q/sumq)
+    #print(reward_func())
+    pop = GA(sigma, fitness)
+    # pop.run()
+    print(q)
+    print(sumq)
+    print(sigma)
 
 
 # test2
