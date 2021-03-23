@@ -1,6 +1,6 @@
 # kich thuoc quan the  va so luong vong lap
 SIZE_POPULATION: 100
-CONDITION_STOP: 300
+CONDITION_STOP: 30
 
 #khoitao
 n: 4 #gia tri khoi tao cua so model con cua ensemble trong khoang [2,n]
