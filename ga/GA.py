@@ -2,6 +2,10 @@ import random
 import yaml
 from ga.Population import Population
 
+f0 = open("log/ga/init.txt", 'w')
+f1 = open("log/ga/run.txt", 'w+')
+
+
 class GA:
     with open("settings/ga/setting.yaml", 'r') as stream:
         config =yaml.load(stream ,Loader=  yaml.FullLoader)
@@ -10,7 +14,12 @@ class GA:
     pc = config['pc']
     pm = config['pm']
     def __init__(self , sigma ,  fitness):
+        f0.write("Hello")
         self.pop = Population(size = GA.SIZE_POPULATION, sigma = sigma,f = fitness)
+        for ind in self.pop.pop:
+            f0.write(ind)
+        f0.write("close file")
+        f0.close()
 
     def crossover_mutation(self):
         a = random.randint(0, GA.SIZE_POPULATION -1 )
@@ -34,6 +43,10 @@ class GA:
             self.pop.pop += child
             print(self.pop.get_best())
             self.pop.selection()
+            f1.write("----------------"+ i+ "--------------")
+            for i in range(GA.SIZE_POPULATION):
+                f1.write(self.pop.pop[i])
             i +=1
+        f1.close()
         return self.pop.get_best()    
 
