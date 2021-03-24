@@ -25,8 +25,9 @@ class Population:
            
             f2 = open("log/ga/runtime.txt","w+")
             f2.seek(0,2)
-            f2.write("bat dau khoi tao: ")
+            f2.write("bat dau khoi tao: \n")
             f2.write(ind.__str__())
+            f2.write("\n")
             f2.close()
             print(ind)
            
@@ -37,13 +38,16 @@ class Population:
             
             f2 = open("log/ga/runtime.txt","w+")
             f2.seek(0,2)
-            f2.write("khoi tao xong: ")
+            f2.write("khoi tao xong: \n")
             f2.write(ind.__str__())
+            f2.write("\n")
             f2.close()
            
             f0 = open("log/ga/init.txt","w+")
             f0.seek(0,2)
+            f0.write("\n")
             f0.write(ind.__str__())
+            f0.write("\n")
             f0.close()
            
             print("----------------<<>><><<<<<<<<<<<<<<<<<<<<<<<>..................>>>>>>>-----------------------------------")
@@ -135,13 +139,15 @@ class Population:
         
         f2 = open("log/ga/runtime.txt","w+")
         f2.seek(0,2)
-        f2.write("lai ghep: ")
+        f2.write("lai ghep: \n")
         f2.write(parent1.__str__())
+        f2.write("\n")
         f2.write(parent2.__str__())
-        f2.write("----------------")
+        f2.write("\n----------------\n")
         f2.write(child1.__str__())
+        f2.write("\n")
         f2.write(child2.__str__())
-        f2.write("----------------")
+        f2.write("\n----------------\n")
         f2.close()
 
         return [child1, child2]
@@ -170,11 +176,11 @@ class Population:
 
         f2 = open("log/ga/runtime.txt","w+")
         f2.seek(0,2)
-        f2.write("Dot bien: ")
+        f2.write("Dot bien: \n")
         f2.write(ind.__str__())
-        f2.write("----------------")
+        f2.write("\n----------------\n")
         f2.write(child.__str__())
-        f2.write("----------------")
+        f2.write("\n----------------\n")
         f2.close()
         return [child]
     

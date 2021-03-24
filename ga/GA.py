@@ -55,9 +55,10 @@ class GA:
             self.pop.selection()
             f1 = open("log/ga/run.txt", 'w+')
             f1.seek(0,2)
-            f1.write("----------------",i,"--------------")
+            f1.write("\n----------------",i,"--------------\n")
             for i in range(GA.SIZE_POPULATION):
                 f1.write(self.pop.pop[i].__str__())
+                f1.write("\n")
             i +=1
             f1.close()
         return self.pop.get_best()    
