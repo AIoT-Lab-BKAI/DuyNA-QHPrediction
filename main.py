@@ -8,7 +8,7 @@ import pandas as pd
 from ga.GA import GA
 from ga.Individual import Individual
 import numpy as np
-
+import os 
 if sys.version_info[0] < 3:
     raise Exception("Python 3 or a more recent version is required.")
 
@@ -64,6 +64,7 @@ def fitness(ind):
 
 
 if __name__ == '__main__':
+    os.environ['TF_FORCE_GPU_ALLOW_GROWTH'] = 'true'
     q = get_list_sigma_result()
     sumq = sum(q)
     sigma = []

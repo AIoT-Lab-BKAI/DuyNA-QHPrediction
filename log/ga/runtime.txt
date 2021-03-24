@@ -1,0 +1,6 @@
+bat dau khoi tao: 
+ssa =0 1 0 0 0 0 1 1 0 0 1 0 0 1 0 1 1 0 0 0   n =2  fitness = 0
+bat dau khoi tao: 
+ssa =0 0 0 1 1 0 0 0 1 1 0 0 1 0 1 0 1 1 0 1   n =2  fitness = 0
+bat dau khoi tao: 
+ssa =1 0 1 0 0 1 0 1 1 0 1 0 1 0 1 1 1 0 1 0   n =2  fitness = 0
