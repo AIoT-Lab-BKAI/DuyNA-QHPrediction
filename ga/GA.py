@@ -13,10 +13,11 @@ class GA:
     def __init__(self , sigma ,  fitness):
         f0 = open("log/ga/init.txt", 'w')
         f0.write("Hello")
+        f0.close()
         print("hello>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
         self.pop = Population(size = GA.SIZE_POPULATION, sigma = sigma,f = fitness)
-        for ind in self.pop.pop:
-            f0.write(ind)
+        # for ind in self.pop.pop:
+        #     f0.write(ind)
         print("--------------------close----------------------------")
         print("--------------------close----------------------------")
         print("--------------------close----------------------------")
@@ -27,8 +28,7 @@ class GA:
         print("--------------------close----------------------------")
         print("--------------------close----------------------------")
         print("--------------------close----------------------------")
-        f0.write("close file")
-        f0.close()
+        
 
     def crossover_mutation(self):
         a = random.randint(0, GA.SIZE_POPULATION -1 )
@@ -44,7 +44,7 @@ class GA:
             return self.pop.mutation(ind1) + self.pop.mutation(ind2)
 
     def run(self):
-        f1 = open("log/ga/run.txt", 'w+')
+       
         i = 0
         while i < GA.CONDITION_STOP:
             child = []
@@ -53,10 +53,12 @@ class GA:
             self.pop.pop += child
             print(self.pop.get_best())
             self.pop.selection()
+            f1 = open("log/ga/run.txt", 'w+')
+            f1.seek(0,2)
             f1.write("----------------",i,"--------------")
             for i in range(GA.SIZE_POPULATION):
                 f1.write(self.pop.pop[i])
             i +=1
-        f1.close()
+            f1.close()
         return self.pop.get_best()    
 

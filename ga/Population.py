@@ -22,11 +22,29 @@ class Population:
             print('----------khoi tao con thu i: ',i,">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
             print('----------khoi tao con thu i: ',i,">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
             print('----------khoi tao con thu i: ',i,">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+           
+            f2 = open("log/ga/runtime.txt","w+")
+            f2.seek(0,2)
+            f2.write("bat dau khoi tao: ")
+            f2.write(ind)
             print(ind)
+           
             print('----------khoi tao con thu i: ',i,">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
             print('----------khoi tao con thu i: ',i,">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
             print('----------khoi tao con thu i: ',i,">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
             ind.value_fitness = self.fitness(ind)
+            
+            f2 = open("log/ga/runtime.txt","w+")
+            f2.seek(0,2)
+            f2.write("khoi tao xong: ")
+            f2.write(ind)
+            f2.close()
+           
+            f0 = open("log/ga/init.txt","w+")
+            f0.seek(0,2)
+            f0.write(ind)
+            f0.close()
+           
             print("----------------<<>><><<<<<<<<<<<<<<<<<<<<<<<>..................>>>>>>>-----------------------------------")
             print("----------------<<>><><<<<<<<<<<<<<<<<<<<<<<<>..................>>>>>>>-----------------------------------")
             print("----------------<<>><><<<<<<<<<<<<<<<<<<<<<<<>..................>>>>>>>-----------------------------------")
@@ -112,6 +130,19 @@ class Population:
         
         child1.value_fitness = self.fitness(child1)
         child2.value_fitness = self.fitness(child2)
+        
+        
+        f2 = open("log/ga/runtime.txt","w+")
+        f2.seek(0,2)
+        f2.write("lai ghep: ")
+        f2.write(parent1)
+        f2.write(parent2)
+        f2.write("----------------")
+        f2.write(child1)
+        f2.write(child2)
+        f2.write("----------------")
+        f2.close()
+
         return [child1, child2]
 
     def mutation(self, ind):
@@ -135,6 +166,15 @@ class Population:
         child.set_genes(child1)
         child.set_n(int(random.gauss(ind.n, Population.sm)))
         child.value_fitness = self.fitness(child)
+
+        f2 = open("log/ga/runtime.txt","w+")
+        f2.seek(0,2)
+        f2.write("Dot bien: ")
+        f2.write(ind)
+        f2.write("----------------")
+        f2.write(child)
+        f2.write("----------------")
+        f2.close()
         return [child]
     
     
