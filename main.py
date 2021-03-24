@@ -60,7 +60,7 @@ def fitness(ind):
     for i in range(ind.size):
         if ind.genes[i]==1:
             sigma_index_lst.append(i)
-    return reward_func(sigma_index_lst=sigma_index_lst, epoch_num= ind.n)[0]
+    return reward_func(sigma_index_lst=sigma_index_lst,default_n=20, epoch_num= ind.n, epoch_min = 100, epoch_step=50)[0]
 
 
 if __name__ == '__main__':
@@ -69,6 +69,10 @@ if __name__ == '__main__':
     sigma = []
     for i in q:
         sigma.append(i/sumq)
+    print("((((((((((((((((((   q   )))))))))))))))))))")
+    print(q)
+    print("(((((((((((((((((( sigma )))))))))))))))))))")
+    print(sigma)
     pop = GA(sigma, fitness)
     pop.run()
    

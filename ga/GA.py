@@ -53,7 +53,7 @@ class GA:
             self.pop.pop += child
             print(self.pop.get_best())
             self.pop.selection()
-            f1.write("----------------"+ i+ "--------------")
+            f1.write("----------------",i,"--------------")
             for i in range(GA.SIZE_POPULATION):
                 f1.write(self.pop.pop[i])
             i +=1
