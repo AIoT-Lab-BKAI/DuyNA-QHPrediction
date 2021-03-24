@@ -18,7 +18,10 @@ class Population:
         self.fitness = f
         for i in range(self.size):
             ind = Individual(sigma)
+            print('khoi tao con thu i: '+i)
             ind.value_fitness = self.fitness(ind)
+            print(ind)
+            print("---------------------------------------------------")
             self.pop.append(ind)
         
     
