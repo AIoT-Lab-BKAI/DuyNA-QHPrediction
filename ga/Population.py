@@ -23,7 +23,7 @@ class Population:
             print('----------khoi tao con thu i: ',i,">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
             print('----------khoi tao con thu i: ',i,">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
            
-            f2 = open("log/ga/runtime.txt","w+")
+            f2 = open("log/ga/runtime.txt","a+")
             f2.seek(0,2)
             f2.write("bat dau khoi tao: \n")
             f2.write(ind.__str__())
@@ -36,14 +36,14 @@ class Population:
             print('----------khoi tao con thu i: ',i,">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
             ind.value_fitness = self.fitness(ind)
             
-            f2 = open("log/ga/runtime.txt","w+")
+            f2 = open("log/ga/runtime.txt","a+")
             f2.seek(0,2)
             f2.write("khoi tao xong: \n")
             f2.write(ind.__str__())
             f2.write("\n")
             f2.close()
            
-            f0 = open("log/ga/init.txt","w+")
+            f0 = open("log/ga/init.txt","a+")
             f0.seek(0,2)
             f0.write("\n")
             f0.write(ind.__str__())
@@ -137,7 +137,7 @@ class Population:
         child2.value_fitness = self.fitness(child2)
         
         
-        f2 = open("log/ga/runtime.txt","w+")
+        f2 = open("log/ga/runtime.txt","a+")
         f2.seek(0,2)
         f2.write("lai ghep: \n")
         f2.write(parent1.__str__())
@@ -174,7 +174,7 @@ class Population:
         child.set_n(int(random.gauss(ind.n, Population.sm)))
         child.value_fitness = self.fitness(child)
 
-        f2 = open("log/ga/runtime.txt","w+")
+        f2 = open("log/ga/runtime.txt","a+")
         f2.seek(0,2)
         f2.write("Dot bien: \n")
         f2.write(ind.__str__())

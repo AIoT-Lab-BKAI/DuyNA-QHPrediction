@@ -11,7 +11,7 @@ class GA:
     pc = config['pc']
     pm = config['pm']
     def __init__(self , sigma ,  fitness):
-        f0 = open("log/ga/init.txt", 'w')
+        f0 = open("log/ga/init.txt", 'a+')
         f0.write("Hello")
         f0.close()
         print("hello>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
@@ -53,7 +53,7 @@ class GA:
             self.pop.pop += child
             print(self.pop.get_best())
             self.pop.selection()
-            f1 = open("log/ga/run.txt", 'w+')
+            f1 = open("log/ga/run.txt", 'a+')
             f1.seek(0,2)
             f1.write("\n----------------",i,"--------------\n")
             for i in range(GA.SIZE_POPULATION):
