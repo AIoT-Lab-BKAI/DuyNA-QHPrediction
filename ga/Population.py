@@ -195,5 +195,5 @@ class Population:
                 return self.pop[i]
     
     def selection(self):
-        self.pop = sorted(self.pop, key= lambda x : -x.value_fitness)
+        self.pop = sorted(self.pop, key= lambda x : x.value_fitness)
         self.pop = self.pop[0:self.size]
