@@ -483,7 +483,7 @@ class Ensemble:
         with open(self.log_dir + 'evaluate_score_total.txt', 'a') as f:
             f.write(_str)
 
-        return (np.mean(eval_df["var_score_q"].tolist()), np.mean(eval_df["var_score_h"].tolist()))
+        return (np.mean(eval_df["mse_q"].tolist()), np.mean(eval_df["mse_h"].tolist()))
 
     def evaluate_model_by_month(self):
         df = pd.read_csv('./log/data_analysis/predict_val_{}.csv'.format(0))
