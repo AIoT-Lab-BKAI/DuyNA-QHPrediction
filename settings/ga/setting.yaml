@@ -4,7 +4,7 @@ CONDITION_STOP: 10
 
 #khoitao
 n: 4 #gia tri khoi tao cua so model con cua ensemble trong khoang [2,n]
-nmax: 8 #gia tri lon nhat cua n
+nmax: 6 #gia tri lon nhat cua n
 
 pi: 0.7 #khoi tao ngau nhien 
 psm: 0.5 #khoi tao theo xac xuat sigma

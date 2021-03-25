@@ -34,7 +34,9 @@ class Population:
             print('----------khoi tao con thu i: ',i,">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
             print('----------khoi tao con thu i: ',i,">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
             print('----------khoi tao con thu i: ',i,">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
-            ind.value_fitness = self.fitness(ind)
+            
+            if ind.value_fitness != 10:
+                ind.value_fitness = self.fitness(ind)
             
             f2 = open("log/ga/runtime.txt","a+")
             f2.seek(0,2)

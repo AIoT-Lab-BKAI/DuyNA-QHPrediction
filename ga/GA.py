@@ -53,13 +53,18 @@ class GA:
             self.pop.pop += child
             print(self.pop.get_best())
             self.pop.selection()
+            f2 = open("log/ga/runtime.txt","a+")
+            f2.seek(0,2)
+            f2.write("\n+++++++++++++++Chon loc lan thu : ",i+1,"+++++++++++++++++++\n")
             f1 = open("log/ga/run.txt", 'a+')
             f1.seek(0,2)
-            f1.write("\n----------------",i,"--------------\n")
+            f1.write("\n----------------the he: ",i+1,"--------------\n")
             for i in range(GA.SIZE_POPULATION):
                 f1.write(self.pop.pop[i].__str__())
                 f1.write("\n")
             i +=1
             f1.close()
+            f2.write("\n+++++++++++++++Chon  loc  xong : ",i+1,"+++++++++++++++++++\n")
+            f2.close()
         return self.pop.get_best()    
 
