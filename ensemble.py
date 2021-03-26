@@ -68,7 +68,7 @@ class Ensemble:
         self.epoch_min = epoch_min
         self.epoch_num = epoch_num
         self.epoch_step = epoch_step
-        self.epoch_max = self.epoch_min + epoch_num * epoch_step
+        self.epoch_max = self.epoch_min + (epoch_num - 1) * epoch_step
         self.epochs_out = self._model_kwargs.get('epochs_out')
         self.input_dim = self._model_kwargs.get('in_dim')
         self.output_dim = self._model_kwargs.get('out_dim')
