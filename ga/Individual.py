@@ -10,21 +10,21 @@ class Individual:
     def __init__(self, sigma):
         self.size = len(sigma)
         self.genes = [0] * self.size
-        check0 = 0
+        # check0 = 0
         if random.random() < Individual.pi:
             for i in range(self.size):
                 if random.random() < 0.5:
                     self.genes[i] = 1
-                check0 += self.genes[i]
+                # check0 += self.genes[i]
         else:
             for i in range(self.size):
                 if random.random() < sigma[i] :
                     self.genes[i] = 1
-                check0 += self.genes[i]
+                # check0 += self.genes[i]
         self.n = random.randint(2, Individual.n) 
         self.value_fitness = 0
-        if check0 ==0:
-            self.value_fitness = 10
+      
+        # self.value_fitness = 100000000
 
     def __str__(self):
         s ="ssa ="

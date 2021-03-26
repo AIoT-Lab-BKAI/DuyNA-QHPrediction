@@ -60,6 +60,8 @@ def fitness(ind):
     for i in range(ind.size):
         if ind.genes[i]==1:
             sigma_index_lst.append(i)
+    if len(sigma_index_lst)==0:
+        return 100000000
     return reward_func(sigma_index_lst=sigma_index_lst,default_n=20, epoch_num= ind.n, epoch_min = 100, epoch_step=50)[0]
 
 
