@@ -34,7 +34,7 @@ class Individual:
         time = str(self.time)
         s ="ssa ="
         for i in self.genes:
-            s += time ' --> : '+ str(i) + ' '
+            s += time +' --> : '+ str(i) + ' '
         s +="  n =" + str(self.n) + "  fitness = " + str(self.value_fitness)
         return s
 
