@@ -1,5 +1,9 @@
 import random
 import yaml
+import datetime
+import pytz
+
+print(type(date_object))
 class Individual:
     with open("settings/ga/setting.yaml", 'r') as stream:
         config =yaml.load(stream ,Loader= yaml.FullLoader)
@@ -23,13 +27,14 @@ class Individual:
                 # check0 += self.genes[i]
         self.n = random.randint(2, Individual.n) 
         self.value_fitness = 0
-      
+        self.time = datetime.datetime.now(pytz.timezone('Asia/Ho_Chi_Minh'))
         # self.value_fitness = 100000000
 
     def __str__(self):
+        time = str(self.time)
         s ="ssa ="
         for i in self.genes:
-            s += str(i) + ' '
+            s += time ' --> : '+ str(i) + ' '
         s +="  n =" + str(self.n) + "  fitness = " + str(self.value_fitness)
         return s
 

@@ -62,8 +62,8 @@ def fitness(ind):
             sigma_index_lst.append(i)
     if len(sigma_index_lst)==0:
         return 100000000
-    return reward_func(sigma_index_lst=sigma_index_lst,default_n=20, epoch_num= ind.n, epoch_min = 100, epoch_step=50)[0]
-
+    fitnesss = reward_func(sigma_index_lst=sigma_index_lst,default_n=20, epoch_num= ind.n, epoch_min = 100, epoch_step=50)[0]
+    return fitnesss
 
 if __name__ == '__main__':
     os.environ['TF_FORCE_GPU_ALLOW_GROWTH'] = 'true'

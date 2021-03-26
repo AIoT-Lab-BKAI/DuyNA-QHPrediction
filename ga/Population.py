@@ -1,6 +1,8 @@
 import random
 import yaml
 from ga.Individual import Individual
+import datetime
+import pytz
 
 class Population:
     with open("settings/ga/setting.yaml", 'r') as stream:
@@ -40,7 +42,7 @@ class Population:
             print("-->")
             
             ind.value_fitness = self.fitness(ind)
-            
+            ind.time = datetime.datetime.now(pytz.timezone('Asia/Ho_Chi_Minh'))
             f2 = open("log/ga/runtime.txt","a+")
             f2.seek(0,2)
             f2.write("khoi tao xong: \n")
@@ -143,7 +145,9 @@ class Population:
             child2.set_n(self.BLX(parent1.n, parent2.n))
         
         child1.value_fitness = self.fitness(child1)
+        child1.time = datetime.datetime.now(pytz.timezone('Asia/Ho_Chi_Minh'))
         child2.value_fitness = self.fitness(child2)
+        child2.time = datetime.datetime.now(pytz.timezone('Asia/Ho_Chi_Minh'))
         
         
         f2 = open("log/ga/runtime.txt","a+")
@@ -182,6 +186,7 @@ class Population:
         child.set_genes(child1)
         child.set_n(int(random.gauss(ind.n, Population.sm)))
         child.value_fitness = self.fitness(child)
+        child.time = datetime.datetime.now(pytz.timezone('Asia/Ho_Chi_Minh'))
 
         f2 = open("log/ga/runtime.txt","a+")
         f2.seek(0,2)
