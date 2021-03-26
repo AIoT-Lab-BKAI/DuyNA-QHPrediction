@@ -3,7 +3,7 @@ import yaml
 import datetime
 import pytz
 
-print(type(date_object))
+
 class Individual:
     with open("settings/ga/setting.yaml", 'r') as stream:
         config =yaml.load(stream ,Loader= yaml.FullLoader)
