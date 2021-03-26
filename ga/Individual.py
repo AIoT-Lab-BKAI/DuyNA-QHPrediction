@@ -32,9 +32,9 @@ class Individual:
 
     def __str__(self):
         time = str(self.time)
-        s ="ssa ="
+        s = time +' --> : '+ "ssa ="
         for i in self.genes:
-            s += time +' --> : '+ str(i) + ' '
+            s +=  str(i) + ' '
         s +="  n =" + str(self.n) + "  fitness = " + str(self.value_fitness)
         return s
 
