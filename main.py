@@ -8,9 +8,10 @@ import pandas as pd
 from ga.GA import GA
 from ga.Individual import Individual
 import numpy as np
-import os 
+import os
 if sys.version_info[0] < 3:
     raise Exception("Python 3 or a more recent version is required.")
+
 
 def get_list_sigma_result(default_n=20):
     with open('./settings/model/config.yaml', 'r') as f:
@@ -25,7 +26,8 @@ def get_list_sigma_result(default_n=20):
 
     lst_sigma_H = H_ssa_L20.get_lst_sigma()
     lst_sigma_Q = Q_ssa_L20.get_lst_sigma()
-    return  lst_sigma_Q
+    return lst_sigma_Q
+
 
 def reward_func(sigma_index_lst=[1, 2, 3], default_n=20, epoch_num=4, epoch_min=100, epoch_step=50):
     '''
@@ -55,15 +57,18 @@ def reward_func(sigma_index_lst=[1, 2, 3], default_n=20, epoch_num=4, epoch_min=
     model.retransform_prediction(mode='roll')
     return model.evaluate_model(mode='roll')
 
+
 def fitness(ind):
-    sigma_index_lst =[]
+    sigma_index_lst = []
     for i in range(ind.size):
-        if ind.genes[i]==1:
+        if ind.genes[i] == 1:
             sigma_index_lst.append(i)
-    if len(sigma_index_lst)==0:
+    if len(sigma_index_lst) == 0:
         return 100000000
-    fitnesss = reward_func(sigma_index_lst=sigma_index_lst,default_n=20, epoch_num= ind.n, epoch_min = 100, epoch_step=50)[0]
+    fitnesss = reward_func(sigma_index_lst=sigma_index_lst, default_n=20,
+                           epoch_num=ind.n, epoch_min=100, epoch_step=50)[0]
     return fitnesss
+
 
 if __name__ == '__main__':
     os.environ['TF_FORCE_GPU_ALLOW_GROWTH'] = 'true'
@@ -71,15 +76,13 @@ if __name__ == '__main__':
     sumq = sum(q)
     sigma = []
     for i in q:
-        sigma.append(i/sumq)
+        sigma.append(i / sumq)
     print("((((((((((((((((((   q   )))))))))))))))))))")
     print(q)
     print("(((((((((((((((((( sigma )))))))))))))))))))")
     print(sigma)
     pop = GA(sigma, fitness)
     pop.run()
-   
-    
 
 
 # test2
