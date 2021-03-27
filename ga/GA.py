@@ -10,13 +10,14 @@ class GA:
     CONDITION_STOP =  config['CONDITION_STOP'] 
     pc = config['pc']
     pm = config['pm']
+    
     def __init__(self , sigma ,  fitness):
         f0 = open("log/ga/init.txt", 'a+')
         f0.write("Hello")
         f0.close()
         print("hello>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
         
-        self.pop = Population(size = GA.SIZE_POPULATION, sigma = sigma,f = fitness, file_name = None)
+        self.pop = Population(size = GA.SIZE_POPULATION, sigma = sigma,f = fitness)
      
         print("--------------------close----------------------------")
         print("-")
@@ -35,6 +36,7 @@ class GA:
         b = random.randint(0, GA.SIZE_POPULATION -1 )
         while a == b:
             b = random.randint(0, GA.SIZE_POPULATION -1)
+        print(a," ",b)
         ind1 = self.pop.pop[a]
         ind2 = self.pop.pop[b]
         p = random.random()
@@ -56,7 +58,7 @@ class GA:
             self.pop.selection()
             
             fi = open(file_name,'w+')
-            fi.write(i+1)
+            fi.write(str(i+1))
             fi.write('\n')
             fi.close()
             for x in self.pop.pop:

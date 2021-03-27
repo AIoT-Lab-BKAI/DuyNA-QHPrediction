@@ -13,32 +13,36 @@ class Population:
     pAMOX = config['pAMOX']
     sm =config['sigma']
     pmx = config['pmx']
-
-    def __init__(self, size, sigma, file_name=None):
+    file_name = config['populationInit']
+    def __init__(self, size, sigma,f):
         self.sigma = sigma
         self.size = size
         self.pop = []
         self.fitness = f
         self.k = 0
-        if file_name != None:
-            file = open(file_name,'r')
-            preline = file.readlines()
-            self.k = int(preline)
+        if Population.file_name != 'None':
+            file = open(Population.file_name,'r')
+            preline = file.readline()
+            self.k = int(preline[0])
             while preline:
-                preline = file.readlines()
+                print(preline)
+                preline = file.readline()
                 if len(preline)<1:
                     break
                 s = preline.split()
                 l = len(s)
-                ssa = [x for int(x) in s[0:l-2]]
+                ssa = [int(x) for x in s[0:l-2]]
                 n = int(s[l-2])
                 fitness = float(s[l-1])
                 ind = Individual(sigma)
                 ind.set_genes(ssa)
                 ind.set_n(n)
-                ind.value_fitness = self.fitness(ind)
+                ind.value_fitness = fitness
                 self.pop.append(ind)
-
+            f2 = open("log/ga/runtime.txt","a+")
+            f2.seek(0,2)
+            f2.write("Load population ... \n")
+            f2.close()
 
         else:    
             for i in range(self.size):
@@ -81,7 +85,7 @@ class Population:
                 self.pop.append(ind)
             file_name="log/ga/population0.txt"
             fi = open(file_name,'w+')
-            fi.write(0)
+            fi.write("0")
             fi.write('\n')
             fi.close()
             for x in self.pop:
@@ -141,6 +145,10 @@ class Population:
     
 
     def crossover(self, parent1, parent2):
+        f2 = open("log/ga/runtime.txt","a+")
+        f2.seek(0,2)
+        f2.write("lai ghep: \n")
+        f2.close()
         child1 = Individual(self.sigma)
         child2 = Individual(self.sigma) 
         r = random.random()
@@ -168,7 +176,6 @@ class Population:
         
         f2 = open("log/ga/runtime.txt","a+")
         f2.seek(0,2)
-        f2.write("lai ghep: \n")
         f2.write(parent1.__str__())
         f2.write("\n")
         f2.write(parent2.__str__())
@@ -182,6 +189,10 @@ class Population:
         return [child1, child2]
 
     def mutation(self, ind):
+        f2 = open("log/ga/runtime.txt","a+")
+        f2.seek(0,2)
+        f2.write("Dot bien: \n")
+        f2.close()
         parent1 = ind.genes
         child1 = [ i for i in parent1]
         if random.random() < Population.pmx:
@@ -206,7 +217,6 @@ class Population:
 
         f2 = open("log/ga/runtime.txt","a+")
         f2.seek(0,2)
-        f2.write("Dot bien: \n")
         f2.write(ind.__str__())
         f2.write("\n----------------\n")
         f2.write(child.__str__())
