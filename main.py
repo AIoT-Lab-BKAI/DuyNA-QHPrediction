@@ -84,5 +84,13 @@ if __name__ == '__main__':
     pop = GA(sigma, fitness)
     pop.run()
 
-
+    # gene = [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    # n = 2
+    # sigma_index_lst = []
+    # for i in range(len(gene)):
+    #     if gene[i] == 1:
+    #         sigma_index_lst.append(i)
+    # fitnesss = reward_func(sigma_index_lst=sigma_index_lst, default_n=20,
+    #                        epoch_num=n, epoch_min=100, epoch_step=50)[0]
+    # print(fitness)
 # test2
