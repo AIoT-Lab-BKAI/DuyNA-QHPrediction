@@ -37,6 +37,16 @@ class Individual:
             s +=  str(i) + ' '
         s +="  n =" + str(self.n) + "  fitness = " + str(self.value_fitness)
         return s
+    def write_file(self,file_name,t):
+        s=''
+        for i in self.genes:
+            s +=  str(i) + ' '
+        s += self.n + ' '+ self.value_fitness
+        f = open(file_name,t)
+        f.seek(0,2)
+        f.write(s)
+        f.write('\n')
+        f.close()
 
     def get_genes(self):
         return self.genes

@@ -15,9 +15,9 @@ class GA:
         f0.write("Hello")
         f0.close()
         print("hello>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
-        self.pop = Population(size = GA.SIZE_POPULATION, sigma = sigma,f = fitness)
-        # for ind in self.pop.pop:
-        #     f0.write(ind)
+        
+        self.pop = Population(size = GA.SIZE_POPULATION, sigma = sigma,f = fitness, file_name = None)
+     
         print("--------------------close----------------------------")
         print("-")
         print("-")
@@ -44,37 +44,40 @@ class GA:
             return self.pop.mutation(ind1) + self.pop.mutation(ind2)
 
     def run(self):
-       
-        i = 0
+        
+        i = self.pop.k
         while i < GA.CONDITION_STOP:
+            file_name="log/ga/population"+str(i+1)+".txt"
             child = []
             while len(child) < GA.SIZE_POPULATION:
                        child += self.crossover_mutation()
             self.pop.pop += child
             print(self.pop.get_best())
             self.pop.selection()
+            
+            fi = open(file_name,'w+')
+            fi.write(i+1)
+            fi.write('\n')
+            fi.close()
+            for x in self.pop.pop:
+                x.write_file(file_name,'a+')
+
             f2 = open("log/ga/runtime.txt","a+")
             f2.seek(0,2)
-            f2.write("\n+++++++++++++++Chon loc lan thu : ",i+1,"+++++++++++++++++++\n")
             print("\n+++++++++++++++Chon loc lan thu : ",i+1,"+++++++++++++++++++\n")
-            print("+")
-            print("+")
-            print("+")
-            print("+")
-            print("+")
-            print("+")
+            f2.write("\n+++++++++++++++Chon loc lan thu : "+str(i+1)+"+++++++++++++++++++\n")
             print("+")
             print("+")
             print("+")
             f1 = open("log/ga/run.txt", 'a+')
             f1.seek(0,2)
-            f1.write("\n----------------the he: ",i+1,"--------------\n")
+            f1.write("\n----------------the he: "+str(i+1)+"--------------\n")
             for i in range(GA.SIZE_POPULATION):
                 f1.write(self.pop.pop[i].__str__())
                 f1.write("\n")
             i +=1
             f1.close()
-            f2.write("\n+++++++++++++++Chon  loc  xong : ",i+1,"+++++++++++++++++++\n")
+            f2.write("\n+++++++++++++++Chon  loc  xong : "+str(i+1)+"+++++++++++++++++++\n")
             print("-----------------------------------------------------")
             f2.close()
         return self.pop.get_best()    

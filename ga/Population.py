@@ -13,64 +13,80 @@ class Population:
     pAMOX = config['pAMOX']
     sm =config['sigma']
     pmx = config['pmx']
-    def __init__(self, size, sigma, f):
+
+    def __init__(self, size, sigma, file_name=None):
         self.sigma = sigma
         self.size = size
         self.pop = []
         self.fitness = f
-        for i in range(self.size):
-            ind = Individual(sigma)
-            print('----------khoi tao con thu i: ',i,">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
-            print("-->")
-            print("-->")
-            print("-->")
-            print("-->")
-            print("-->")
+        self.k = 0
+        if file_name != None:
+            file = open(file_name,'r')
+            preline = file.readlines()
+            self.k = int(preline)
+            while preline:
+                preline = file.readlines()
+                if len(preline)<1:
+                    break
+                s = preline.split()
+                l = len(s)
+                ssa = [x for int(x) in s[0:l-2]]
+                n = int(s[l-2])
+                fitness = float(s[l-1])
+                ind = Individual(sigma)
+                ind.set_genes(ssa)
+                ind.set_n(n)
+                ind.value_fitness = self.fitness(ind)
+                self.pop.append(ind)
+
+
+        else:    
+            for i in range(self.size):
+                ind = Individual(sigma)
+
+                print('----------khoi tao con thu i: ',i,">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+                print("-->")
            
-            f2 = open("log/ga/runtime.txt","a+")
-            f2.seek(0,2)
-            f2.write("bat dau khoi tao: \n")
-            f2.write(ind.__str__())
-            f2.write("\n")
-            f2.close()
-            print(ind)
+                f2 = open("log/ga/runtime.txt","a+")
+                f2.seek(0,2)
+                f2.write("bat dau khoi tao: \n")
+                f2.write(ind.__str__())
+                f2.write("\n")
+                f2.close()
+
+                print(ind)
            
-            print("-->")
-            print("-->")
-            print("-->")
-            print("-->")
-            print("-->")
+                print("-->")
+                print("-->")
             
-            ind.value_fitness = self.fitness(ind)
-            ind.time = datetime.datetime.now(pytz.timezone('Asia/Ho_Chi_Minh'))
-            f2 = open("log/ga/runtime.txt","a+")
-            f2.seek(0,2)
-            f2.write("khoi tao xong: \n")
-            f2.write(ind.__str__())
-            f2.write("\n")
-            f2.close()
+                ind.value_fitness = self.fitness(ind)
+                ind.time = datetime.datetime.now(pytz.timezone('Asia/Ho_Chi_Minh'))
+                f2 = open("log/ga/runtime.txt","a+")
+                f2.seek(0,2)
+                f2.write("khoi tao xong: \n")
+                f2.write(ind.__str__())
+                f2.write("\n")
+                f2.close()
            
-            f0 = open("log/ga/init.txt","a+")
-            f0.seek(0,2)
-            f0.write("\n")
-            f0.write(ind.__str__())
-            f0.write("\n")
-            f0.close()
+                f0 = open("log/ga/init.txt","a+")
+                f0.seek(0,2)
+                f0.write("\n")
+                f0.write(ind.__str__())
+                f0.write("\n")
+                f0.close()
            
-            print("----------------<<>><><<<<<<<<<<<<<<<<<<<<<<<>..................>>>>>>>-----------------------------------")
-            print("--")
-            print("--")
-            print("--")
-            print("--")
-            print("--")
-            print(ind)
-            print("--")
-            print("--")
-            print("--")
-            print("--")
-            print("--")
-            print("--")
-            self.pop.append(ind)
+                print("----------------<<>><><<<<<<<<<<<<<<<<<<<<<<<>..................>>>>>>>-----------------------------------")            
+                print(ind)
+                print("--")
+                self.pop.append(ind)
+            file_name="log/ga/population0.txt"
+            fi = open(file_name,'w+')
+            fi.write(0)
+            fi.write('\n')
+            fi.close()
+            for x in self.pop:
+                x.write_file(file_name,'a+')
+
         
     
     def  crossover_one_point(self, parent1, parent2):
