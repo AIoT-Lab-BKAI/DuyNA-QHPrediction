@@ -41,7 +41,7 @@ class Individual:
         s=''
         for i in self.genes:
             s +=  str(i) + ' '
-        s += self.n + ' '+ self.value_fitness
+        s += str(self.n) + ' '+ str(self.value_fitness)
         f = open(file_name,t)
         f.seek(0,2)
         f.write(s)
