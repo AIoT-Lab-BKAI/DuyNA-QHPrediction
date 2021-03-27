@@ -57,6 +57,9 @@ class GA:
             print(self.pop.get_best())
             self.pop.selection()
             
+
+
+
             fi = open(file_name,'w+')
             fi.write(str(i+1))
             fi.write('\n')
@@ -74,13 +77,14 @@ class GA:
             f1 = open("log/ga/run.txt", 'a+')
             f1.seek(0,2)
             f1.write("\n----------------the he: "+str(i+1)+"--------------\n")
-            for i in range(GA.SIZE_POPULATION):
-                f1.write(self.pop.pop[i].__str__())
+            for j in range(GA.SIZE_POPULATION):
+                f1.write(self.pop.pop[j].__str__())
                 f1.write("\n")
-            i +=1
+            
             f1.close()
             f2.write("\n+++++++++++++++Chon  loc  xong : "+str(i+1)+"+++++++++++++++++++\n")
             print("-----------------------------------------------------")
             f2.close()
+            i +=1
         return self.pop.get_best()    
 

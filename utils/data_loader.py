@@ -27,13 +27,13 @@ def get_input_data(input_file, default_n, sigma_lst):
     # dat['Q_ssa'] = Q_ssa
     # dat['H_ssa'] = H_ssa
 
-    dat['Q'] = Q_ssa
+    dat['Q_ssa'] = Q_ssa
     # print(dat['Q'][:5])
-    dat['H'] = H_ssa
+    dat['H_ssa'] = H_ssa
     # print(dat['H'][:5])
 
     # print(dat.head())
-    result = dat[['Q', 'H']]
+    result = dat[['Q', 'H', 'Q_ssa', 'H_ssa']]
     return result
 
 

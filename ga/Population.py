@@ -23,7 +23,7 @@ class Population:
         if Population.file_name != 'None':
             file = open(Population.file_name,'r')
             preline = file.readline()
-            self.k = int(preline[0])
+            self.k = int(preline)
             while preline:
                 print(preline)
                 preline = file.readline()
@@ -39,6 +39,7 @@ class Population:
                 ind.set_n(n)
                 ind.value_fitness = fitness
                 self.pop.append(ind)
+
             f2 = open("log/ga/runtime.txt","a+")
             f2.seek(0,2)
             f2.write("Load population ... \n")
@@ -83,6 +84,7 @@ class Population:
                 print(ind)
                 print("--")
                 self.pop.append(ind)
+                
             file_name="log/ga/population0.txt"
             fi = open(file_name,'w+')
             fi.write("0")
