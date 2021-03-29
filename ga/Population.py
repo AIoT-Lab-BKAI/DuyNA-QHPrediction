@@ -223,6 +223,7 @@ class Population:
             for j in range(n1, n2+1):
                 child1[j] = 1- parent1[j]
                
+
         else :
             k = random.randint(0 ,len(parent1)-1)
             child1[k] = 1 - child1[k]
