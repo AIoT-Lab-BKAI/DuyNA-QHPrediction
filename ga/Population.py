@@ -13,7 +13,9 @@ class Population:
     pAMOX = config['pAMOX']
     sm =config['sigma']
     pmx = config['pmx']
+    pmi2 = config['pmi2']
     file_name = config['populationInit']
+
     def __init__(self, size, sigma,f):
         self.sigma = sigma
         self.size = size
@@ -195,9 +197,12 @@ class Population:
         f2.seek(0,2)
         f2.write("Dot bien: \n")
         f2.close()
+
+
         parent1 = ind.genes
         child1 = [ i for i in parent1]
-        if random.random() < Population.pmx:
+        pmm = random.random()
+        if pmm < Population.pmx:
             s = 0
             for i in range(len(parent1)):
                 s += (1-self.sigma[i], self.sigma[i])[parent1[i] == 0] 
@@ -208,9 +213,22 @@ class Population:
                     child1[i] = 1 - child1[i]
                     break
                 a += (1-self.sigma[i], self.sigma[i])[parent1[i] == 0]
+        elif pmm> Population.pmi2:
+            n1 = random.randint(0, len(parent1) -1 )
+            n2 = random.randint(0, len(parent1) -1 )
+            while n1 == n2:
+                n2 = random.randint(0, len(parent1) -1)
+            if n1 > n2:
+                n1, n2 = n2, n1
+            for j in range(n1, n2+1):
+                child1[j] = 1- parent1[j]
+               
+
         else :
             k = random.randint(0 ,len(parent1)-1)
             child1[k] = 1 - child1[k]
+        
+        
         child = Individual(self.sigma)
         child.set_genes(child1)
         child.set_n(int(random.gauss(ind.n, Population.sm)))
@@ -224,6 +242,8 @@ class Population:
         f2.write(child.__str__())
         f2.write("\n----------------\n")
         f2.close()
+
+
         return [child]
     
     

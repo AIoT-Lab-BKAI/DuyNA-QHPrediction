@@ -25,7 +25,7 @@ class Individual:
                 if random.random() < sigma[i] :
                     self.genes[i] = 1
                 # check0 += self.genes[i]
-        self.n = random.randint(2, Individual.n) 
+        self.n = random.randint(2, Individual.nmax) 
         self.value_fitness = 0
         self.time = datetime.datetime.now(pytz.timezone('Asia/Ho_Chi_Minh'))
         # self.value_fitness = 100000000
