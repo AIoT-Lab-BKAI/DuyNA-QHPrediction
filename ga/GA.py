@@ -57,7 +57,7 @@ class GA:
             self.pop.pop += child
             self.pop.selection()
             self.pop.get_best()
-
+    
 
 
             fi = open(file_name,'w+')
@@ -86,5 +86,5 @@ class GA:
             print("-----------------------------------------------------")
             f2.close()
             i +=1
-        return self.pop.get_best()    
+        return 0    
 

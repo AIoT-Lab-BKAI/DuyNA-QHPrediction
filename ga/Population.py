@@ -83,7 +83,7 @@ class Population:
                 print("--")
 
             self.pop = sorted(self.pop, key= lambda x : x.value_fitness)   
-            self.get_best()
+            
 
             file_name="log/ga/population0.txt"
             fi = open(file_name,'w+')
@@ -93,7 +93,7 @@ class Population:
 
             for x in self.pop:
                 x.write_file(file_name,'a+')
-
+        self.get_best()
         
     
     def  crossover_one_point(self, parent1, parent2):
@@ -247,13 +247,15 @@ class Population:
     
     def get_best(self):
         best = open("log/ga/best.txt","a+")
-        best.write(str(k)+" :: ")
+        best.write(str(self.k)+" :: ")
         best.write(self.pop[0].__str__())
+        best.write('\n')
+        self.k+=1
         best.close()
 
     def selection(self):
         popsorted = sorted(self.pop, key= lambda x : x.value_fitness)
-        popchild  = popsorted[0:self.size*Population.pselection]
+        popchild  = popsorted[0:int(self.size*Population.pselection)]
 
         k = 0;
         while k < self.size*(1- Population.pselection):
