@@ -42,9 +42,10 @@ class GA:
         p = random.random()
         if p < GA.pc:
             return self.pop.crossover(ind1,ind2)
-        else:
+        elif p < GA.pc + GA.pm:
             return self.pop.mutation(ind1) + self.pop.mutation(ind2)
-
+        else:
+            return self.crossover_mutation()
     def run(self):
         
         i = self.pop.k
@@ -52,11 +53,10 @@ class GA:
             file_name="log/ga/population"+str(i+1)+".txt"
             child = []
             while len(child) < GA.SIZE_POPULATION:
-                       child += self.crossover_mutation()
+                child += self.crossover_mutation()
             self.pop.pop += child
-            print(self.pop.get_best())
             self.pop.selection()
-            
+            self.pop.get_best()
 
 
 
