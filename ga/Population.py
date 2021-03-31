@@ -93,8 +93,9 @@ class Population:
 
             for x in self.pop:
                 x.write_file(file_name,'a+')
-        self.get_best()
+        self.get_best(self.k)  
         
+      
     
     def  crossover_one_point(self, parent1, parent2):
         n1 = random.randint(1,len(parent1)-1)
@@ -245,12 +246,11 @@ class Population:
         return [child]
     
     
-    def get_best(self):
+    def get_best(self,i):
         best = open("log/ga/best.txt","a+")
-        best.write(str(self.k)+" :: ")
+        best.write(str(i)+" :: ")
         best.write(self.pop[0].__str__())
         best.write('\n')
-        self.k+=1
         best.close()
 
     def selection(self):

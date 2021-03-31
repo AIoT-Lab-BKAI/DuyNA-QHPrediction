@@ -56,7 +56,7 @@ class GA:
                 child += self.crossover_mutation()
             self.pop.pop += child
             self.pop.selection()
-            self.pop.get_best()
+            self.pop.get_best(i)
     
 
 
