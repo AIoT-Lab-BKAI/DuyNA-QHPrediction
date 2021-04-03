@@ -55,8 +55,8 @@ class Ensemble:
         self._ssa_kwargs = kwargs.get('ssa')
 
         self.data_file = self._data_kwargs.get('data_file')
-        self.dt_split_point_outer = self._data_kwargs.get('split_point_outer')
-        self.dt_split_point_inner = self._data_kwargs.get('split_point_inner')
+        self.dt_split_point_outer = self._data_kwargs.get('split_point_outer') # test
+        self.dt_split_point_inner = self._data_kwargs.get('split_point_inner') # valid
         self.cols_x = self._data_kwargs.get('cols_x')
         self.cols_y = self._data_kwargs.get('cols_y')
         self.cols_gt = self._data_kwargs.get('cols_gt')
@@ -78,9 +78,75 @@ class Ensemble:
         self.sigma_lst = sigma_lst
         self.default_n = default_n
 
-        self.data = self.generate_data()
+        # self.data = self.generate_data()
+        self.data = {}
         self.inner_model = self.build_model_inner()
         self.outer_model = self.build_model_outer()
+
+    def generate_data_kfold(self, sub_model_ind=0):
+        dat = get_input_data(self.data_file, self.default_n, self.sigma_lst)
+        dat = dat.to_numpy()
+
+        data = {}
+        data['shape'] = dat.shape
+
+        # test
+        test_start_idx = int(dat.shape[0] * (1- self.dt_split_point_outer* (sub_model_ind+1))) # lay khoang 10% bo data tuong ung voi sub_model_ind
+        test_stop_idx = int(dat.shape[0] * (1- self.dt_split_point_outer* sub_model_ind ))
+        print('hungvv')
+        print(test_start_idx)
+        print(test_stop_idx)
+
+        # luon lay valid truoc test 30% bo data
+        if (test_start_idx - int(dat.shape[0] * 0.3)) > 0:
+            valid_start_ind = test_start_idx - int(dat.shape[0] * 0.3)
+            valid_stop_ind = test_start_idx
+        else:
+            valid_start_ind = 0
+            valid_stop_ind = test_stop_idx + int(dat.shape[0] * 0.3 - valid_start_ind)
+        print(valid_start_ind)
+        print(valid_stop_ind)
+            # test_outer = int(dat.shape[0] * self.dt_split_point_outer)
+        # train_inner = int((dat.shape[0] - test_outer) * (1 - self.dt_split_point_inner))
+        x, y, scaler, y_gt = extract_data(dataframe=dat,
+                                          window_size=self.window_size,
+                                          target_timstep=self.target_timestep,
+                                          cols_x=self.cols_x,
+                                          cols_y=self.cols_y,
+                                          cols_gt=self.cols_gt,
+                                          mode=self.norm_method)
+        x_test_out, y_test_out, y_gt_test_out = x[test_start_idx:test_stop_idx, :], y[test_start_idx:test_stop_idx, :], y_gt[test_start_idx:test_stop_idx, :]
+
+        if valid_start_ind == 0:
+
+            x_train_in, y_train_in, y_gt_train_in = x[valid_stop_ind:, :], y[valid_stop_ind:, :], y_gt[valid_stop_ind:, :]
+            x_copy , y_copy,y_gt_copy= x.tolist(),y.tolist(), y_gt.tolist()
+            del(x_copy[valid_start_ind:valid_stop_ind])
+            del(y_copy[valid_start_ind:valid_stop_ind])
+            del(y_gt_copy[valid_start_ind:valid_stop_ind])
+
+            x_test_in, y_test_in, y_gt_test_in =  np.array(x_copy),  np.array(y_copy),  np.array(y_gt_copy)
+
+        else:
+
+            x_test_in, y_test_in, y_gt_test_in = x[valid_start_ind:valid_stop_ind, :], y[valid_start_ind:valid_stop_ind, :], y_gt[valid_start_ind:valid_stop_ind, :]
+            x_copy, y_copy, y_gt_copy = x.tolist(),  y.tolist(), y_gt.tolist()
+
+            del(x_copy[valid_start_ind:test_stop_idx])
+            del(y_copy[valid_start_ind:test_stop_idx])
+            del(y_gt_copy[valid_start_ind:test_stop_idx])
+            x_train_in, y_train_in, y_gt_train_in = np.array(x_copy),  np.array(y_copy),  np.array(y_gt_copy)
+
+        for cat in ["train_in", "test_in", "test_out"]:
+            x, y, y_gt = locals()["x_" + cat], locals()["y_" + cat], locals()["y_gt_" + cat]
+            print(cat, "x: ", x.shape, "y: ", y.shape)
+            data["x_" + cat] = x
+            data["y_" + cat] = y
+            data["y_gt_" + cat] = y_gt
+
+        print(data['y_test_in'])
+        data['scaler'] = scaler
+        return data
 
     def generate_data(self, true_t_timestep=1):
         dat = get_input_data(self.data_file, self.default_n, self.sigma_lst)
@@ -166,15 +232,18 @@ class Ensemble:
         return model
 
     def train_model_inner(self):
-        train_shape = self.data['y_test_in'].shape
-        test_shape = self.data['y_test_out'].shape
-        # print(train_shape)
-        # print(test_shape)
-        step = int((self.epoch_max - self.epoch_min) / self.epoch_step) + 1
-        self.data['sub_model'] = step
 
-        x_train_out = np.zeros(shape=(train_shape[0], self.target_timestep, step, train_shape[1]))
-        x_test_out = np.zeros(shape=(test_shape[0], self.target_timestep, step, test_shape[1]))
+        step = int((self.epoch_max - self.epoch_min) / self.epoch_step) + 1
+        print(self.data)
+        self.data['sub_model'] = step # so sub model
+
+
+        # train_shape = self.data['y_test_in'].shape
+        # test_shape = self.data['y_test_out'].shape
+        # # print(train_shape)
+        # # print(test_shape)
+        # x_train_out = np.zeros(shape=(train_shape[0], self.target_timestep, step, train_shape[1]))
+        # x_test_out = np.zeros(shape=(test_shape[0], self.target_timestep, step, test_shape[1]))
         j = 0  # submodel index
 
         lst_epoch_size = get_epoch_size_list(self.epoch_num, self.epoch_min, self.epoch_step)
@@ -182,6 +251,16 @@ class Ensemble:
         if (self.mode == 'train' or self.mode == 'train-inner'):
             from model.models.en_de import train_model as ed_train
             for epoch in lst_epoch_size:
+                # voi moi epoch load data
+                # data = ...
+                self.data  = self.generate_data_kfold(j)
+                train_shape = self.data['y_test_in'].shape
+                test_shape = self.data['y_test_out'].shape
+                # print(train_shape)
+                # print(test_shape)
+                x_train_out = np.zeros(shape=(train_shape[0], self.target_timestep, step, train_shape[1]))
+                x_test_out = np.zeros(shape=(test_shape[0], self.target_timestep, step, test_shape[1]))
+
                 # for epoch in range(self.epoch_min, self.epoch_max + 1, self.epoch_step):
                 self.inner_model.load_weights(self.log_dir + 'ModelPool/init_model.hdf5')
 
@@ -212,6 +291,16 @@ class Ensemble:
                 j += 1
         else:
             for epoch in lst_epoch_size:
+                # load bo data tuong ung voi epoch
+                self.data  = self.generate_data_kfold(sub_model_ind=j)
+
+                train_shape = self.data['y_test_in'].shape
+                test_shape = self.data['y_test_out'].shape
+                # print(train_shape)
+                # print(test_shape)
+                x_train_out = np.zeros(shape=(train_shape[0], self.target_timestep, step, train_shape[1]))
+                x_test_out = np.zeros(shape=(test_shape[0], self.target_timestep, step, test_shape[1]))
+
                 # for epoch in range(self.epoch_min, self.epoch_max + 1, self.epoch_step):
                 if self.model_kind == 'rnn_cnn':
                     self.inner_model.load_weights(self.log_dir + f'ModelPool/best_model_{epoch}.hdf5')
@@ -239,7 +328,7 @@ class Ensemble:
                 x_test_out = self.inner_model.predict([self.data['en_x_test_out'], self.data['de_x_test_out']])
             return x_train_out, x_test_out
         else:
-            num_sub = (self.epoch_max - self.epoch_min) / self.epoch_step + 1
+            num_sub = (self.epoch_max - self.epoch_min) / self.epoch_step + 1 # so submodel
             x_test_out = np.zeros((int(num_sub), self.output_dim))
             for ind, epoch in enumerate(range(self.epoch_min, self.epoch_max + 1, self.epoch_step)):
                 if self.model_kind == 'rnn_cnn':

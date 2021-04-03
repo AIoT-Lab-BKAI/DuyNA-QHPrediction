@@ -1,8 +1,8 @@
 log_dir: ./log/model/
 data:
   data_file: ./data/SonTay.csv
-  split_point_outer: 0.05
-  split_point_inner: 0.4
+  split_point_outer: 0.1 # test
+  split_point_inner: 0.3
   norm_method: min_max
   cols_x:
     - 2
