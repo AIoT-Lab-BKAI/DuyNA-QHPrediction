@@ -85,7 +85,7 @@ if __name__ == '__main__':
     pop.run()
 
     # gene = [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-    # n = 2
+    # n = 3
     # sigma_index_lst = []
     # for i in range(len(gene)):
     #     if gene[i] == 1:

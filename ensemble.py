@@ -55,8 +55,8 @@ class Ensemble:
         self._ssa_kwargs = kwargs.get('ssa')
 
         self.data_file = self._data_kwargs.get('data_file')
-        self.dt_split_point_outer = self._data_kwargs.get('split_point_outer') # test
-        self.dt_split_point_inner = self._data_kwargs.get('split_point_inner') # valid
+        self.dt_split_point_outer = self._data_kwargs.get('split_point_outer')  # test
+        self.dt_split_point_inner = self._data_kwargs.get('split_point_inner')  # valid
         self.cols_x = self._data_kwargs.get('cols_x')
         self.cols_y = self._data_kwargs.get('cols_y')
         self.cols_gt = self._data_kwargs.get('cols_gt')
@@ -80,7 +80,7 @@ class Ensemble:
 
         # self.data = self.generate_data()
         self.data = {}
-        self.data['sub_model'] = 0 # khoi tao so sub_model
+        self.data['sub_model'] = self.epoch_num  # khoi tao so sub_model
         self.inner_model = self.build_model_inner()
         self.outer_model = self.build_model_outer()
 
@@ -94,9 +94,9 @@ class Ensemble:
         test_outer = int(dat.shape[0] * self.dt_split_point_outer)
         train_inner = int((dat.shape[0] - test_outer) * (1 - self.dt_split_point_inner))
 
-        train_drop_len = train_inner / (max_sub_model * 2)
-        train_drop_start  = int(train_drop_len * sub_model_ind)
-        train_drop_end = int(train_drop_len * (sub_model_ind + 1))
+        train_drop_len = int(train_inner / (max_sub_model * 2)) - 1
+        train_drop_start = train_drop_len * sub_model_ind
+        train_drop_end = train_drop_len * (sub_model_ind + 1)
         print('hungvv - start - end')
         print(train_drop_start)
         print(train_drop_end)
@@ -108,13 +108,15 @@ class Ensemble:
                                           cols_gt=self.cols_gt,
                                           mode=self.norm_method)
         x_test_out, y_test_out, y_gt_test_out = x[-test_outer:, :], y[-test_outer:, :], y_gt[-test_outer:, :]
-        x_test_in, y_test_in, y_gt_test_in = x[train_inner:-test_outer, :], y[train_inner:-test_outer, :], y_gt[train_inner:-test_outer, :]
+        x_test_in, y_test_in, y_gt_test_in = x[train_inner:-test_outer,
+                                               :], y[train_inner:-test_outer, :], y_gt[train_inner:-test_outer, :]
 
-        x_copy, y_copy, y_gt_copy = x.tolist().copy(),  y.tolist().copy(), y_gt.tolist().copy()
+        x_copy, y_copy, y_gt_copy = x[:train_inner, :].tolist().copy(
+        ), y[:train_inner, :].tolist().copy(), y_gt[:train_inner, :].tolist().copy()
         del(x_copy[train_drop_start:train_drop_end])
         del(y_copy[train_drop_start:train_drop_end])
         del(y_gt_copy[train_drop_start:train_drop_end])
-        x_train_in, y_train_in, y_gt_train_in = np.array(x_copy),  np.array(y_copy),  np.array(y_gt_copy)
+        x_train_in, y_train_in, y_gt_train_in = np.array(x_copy), np.array(y_copy), np.array(y_gt_copy)
 
         for cat in ["train_in", "test_in", "test_out"]:
             x, y, y_gt = locals()["x_" + cat], locals()["y_" + cat], locals()["y_gt_" + cat]
@@ -228,8 +230,8 @@ class Ensemble:
             for epoch in lst_epoch_size:
                 # voi moi epoch load data
                 # data = ...
-                self.data  = self.generate_data_kfold(sub_model_ind=j, max_sub_model=self.epoch_num)
-                self.data['sub_model'] = self.epoch_num # so sub model
+                self.data = self.generate_data_kfold(sub_model_ind=j, max_sub_model=self.epoch_num)
+                self.data['sub_model'] = self.epoch_num  # so sub model
 
                 train_shape = self.data['y_test_in'].shape
                 test_shape = self.data['y_test_out'].shape
@@ -269,7 +271,8 @@ class Ensemble:
         else:
             for epoch in lst_epoch_size:
                 # load bo data tuong ung voi epoch
-                self.data  = self.generate_data_kfold(sub_model_ind=j, max_sub_model=self.epoch_num)
+                self.data = self.generate_data_kfold(sub_model_ind=j, max_sub_model=self.epoch_num)
+                self.data['sub_model'] = self.epoch_num  # so sub model
 
                 train_shape = self.data['y_test_in'].shape
                 test_shape = self.data['y_test_out'].shape
@@ -306,7 +309,7 @@ class Ensemble:
                 x_test_out = self.inner_model.predict([self.data['en_x_test_out'], self.data['de_x_test_out']])
             return x_train_out, x_test_out
         else:
-            num_sub = (self.epoch_max - self.epoch_min) / self.epoch_step + 1 # so submodel
+            num_sub = (self.epoch_max - self.epoch_min) / self.epoch_step + 1  # so submodel
             x_test_out = np.zeros((int(num_sub), self.output_dim))
             for ind, epoch in enumerate(range(self.epoch_min, self.epoch_max + 1, self.epoch_step)):
                 if self.model_kind == 'rnn_cnn':
