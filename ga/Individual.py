@@ -11,6 +11,7 @@ class Individual:
     pi= config['pi']
     psm = config['psm']
     nmax = config['nmax']
+    sm = config['sigma']
     def __init__(self, sigma):
         self.size = len(sigma)
         self.genes = [0] * self.size
@@ -25,7 +26,7 @@ class Individual:
                 if random.random() < sigma[i] :
                     self.genes[i] = 1
                 # check0 += self.genes[i]
-        self.n = random.randint(2, Individual.nmax) 
+        self.set_n(int(random.gauss(Individual.n, Population.sm)))
         self.value_fitness = 0
         self.time = datetime.datetime.now(pytz.timezone('Asia/Ho_Chi_Minh'))
         # self.value_fitness = 100000000
