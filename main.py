@@ -71,26 +71,26 @@ def fitness(ind):
 
 
 if __name__ == '__main__':
-    os.environ['TF_FORCE_GPU_ALLOW_GROWTH'] = 'true'
-    q = get_list_sigma_result()
-    sumq = sum(q)
-    sigma = []
-    for i in q:
-        sigma.append(i / sumq)
-    print("((((((((((((((((((   q   )))))))))))))))))))")
-    print(q)
-    print("(((((((((((((((((( sigma )))))))))))))))))))")
-    print(sigma)
-    pop = GA(sigma, fitness)
-    pop.run()
+    # os.environ['TF_FORCE_GPU_ALLOW_GROWTH'] = 'true'
+    # q = get_list_sigma_result()
+    # sumq = sum(q)
+    # sigma = []
+    # for i in q:
+    #     sigma.append(i / sumq)
+    # print("((((((((((((((((((   q   )))))))))))))))))))")
+    # print(q)
+    # print("(((((((((((((((((( sigma )))))))))))))))))))")
+    # print(sigma)
+    # pop = GA(sigma, fitness)
+    # pop.run()
 
-    # gene = [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-    # n = 3
-    # sigma_index_lst = []
-    # for i in range(len(gene)):
-    #     if gene[i] == 1:
-    #         sigma_index_lst.append(i)
-    # fitnesss = reward_func(sigma_index_lst=sigma_index_lst, default_n=20,
-    #                        epoch_num=n, epoch_min=100, epoch_step=50)[0]
-    # print(fitness)
+    gene = [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    n = 3
+    sigma_index_lst = []
+    for i in range(len(gene)):
+        if gene[i] == 1:
+            sigma_index_lst.append(i)
+    fitnesss = reward_func(sigma_index_lst=sigma_index_lst, default_n=20,
+                           epoch_num=n, epoch_min=100, epoch_step=50)[0]
+    print(fitnesss)
 # test2
