@@ -7,8 +7,8 @@ populationInit: 'None'
 n: 4 #gia tri khoi tao cua so model con cua ensemble trong khoang [2,n]
 nmax: 10 #gia tri lon nhat cua n
 
-pi: 0.97 #khoi tao ngau nhien 
-psm: 0.03 #khoi tao theo xac xuat sigma
+pi: 0.95 #khoi tao ngau nhien 
+psm: 0.05 #khoi tao theo xac xuat sigma
 
 pmx: 0.2 #xac xuat dot bien theo kinh nghiem
 pmi: 0.3 #xac xuat dot bien ngau nhien 1 điểm 
@@ -27,4 +27,6 @@ pBLX: 0.3 #xac xuat dung BLX
 pAMOX: 0.7 #xac xuat dung BLOX 
 
 sigma: 2 #phuong sai khi dot bien n vs gauss
-selection: 0.7 # chon loc % so ca the tot nhat
+selection: 0.3 # chon loc % so ca the tot nhat
+war: 0.3 # chon loc tranh dau
+rulet: 0.4 # % chon loc theo banh xe rullet

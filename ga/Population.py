@@ -16,6 +16,8 @@ class Population:
     pmi2 = config['pmi2']
     file_name = config['populationInit']
     pselection = config['selection']
+    pwar = config['war']
+    prulet = config['rulet']
 
     def __init__(self, size, sigma,f):
         self.sigma = sigma
@@ -253,17 +255,45 @@ class Population:
         best.write('\n')
         best.close()
 
+    def inverse_fitness(self,fitness):
+        return 100000000 - fitness
+
     def selection(self):
-        popsorted = sorted(self.pop, key= lambda x : x.value_fitness)
-        popchild  = popsorted[0:int(self.size*Population.pselection)]
+
+        n_selection = self.size*Population.pselection
+        n_war = self.size*Population.pwar
+        n_rulet = self.size*Population.prulet
+
+        pop_sorted = sorted(self.pop, key= lambda x : x.value_fitness)
+        pop_child  = pop_sorted[0:n_selection]
+        pop_war = pop_sorted[n_selection:]
+        pop_rulet = pop_sorted[n_selection:]
 
         k = 0;
-        while k < self.size*(1- Population.pselection):
-            a = random.randint(self.size*Population.pselection, self.size*2-1 )
-            b = random.randint(self.size*Population.pselection, self.size*2-1 )
+        while k < n_war :
+            a = random.randint(0, self.size*2-n_war - 1 )
+            b = random.randint(0, self.size*2-n_war - 1 )
             while a == b:
-                b = random.randint(self.size*Population.pselection, self.size*2-1 )
+                b = random.randint(0, self.size*2-n_war - 1 )
             c = min(a,b)
-            popchild.append(popsorted[c])
+            pop_child.append(pop_war[c])
             k+=1
-        self.pop = sorted(popchild, key= lambda x : x.value_fitness)
+        
+        
+        list_f = []
+        sum_fitness =0
+        for ind in pop_rulet:
+            sum_fitness += self.inverse_fitness(ind.value_fitness)
+        for ind in pop_rulet:
+            list_f.append(float(self.inverse_fitness(ind.value_fitness)/sum_fitness))
+        k=0
+        while k< n_rulet:
+            a = random.random()
+            s = 0
+            for i in range(len(list_f)):
+                if a < s+ list_f[i]:
+                    pop_child.append( pop_rulet[i] )
+                    break
+                s+=list_f[i]
+            k+=1
+        self.pop = sorted(pop_child, key= lambda x : x.value_fitness)
