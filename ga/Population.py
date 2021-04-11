@@ -260,9 +260,9 @@ class Population:
 
     def selection(self):
 
-        n_selection = self.size*Population.pselection
-        n_war = self.size*Population.pwar
-        n_rulet = self.size*Population.prulet
+        n_selection = int(self.size*Population.pselection)
+        n_war = int(self.size*Population.pwar)
+        n_rulet = int(self.size*Population.prulet)
 
         pop_sorted = sorted(self.pop, key= lambda x : x.value_fitness)
         pop_child  = pop_sorted[0:n_selection]
