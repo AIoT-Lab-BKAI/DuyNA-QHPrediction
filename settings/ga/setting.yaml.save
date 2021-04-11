@@ -1,0 +1,18 @@
+pmx: 0.2 #xac xuat dot bien theo kinh nghiem
+pmi: 0.2 #xac xuat dot bien ngau nhien 1 điểm 
+pmi2: 0.6 #xac xuat dot biến nhiều điểm
+>>>>>>> bfea9d357ad9a964c761b55b39c22dcee656f9b2
+
+# lai ghep dot bien
+pm: 0.3 #xac xuat dot bien
+pc: 0.7 #xac xuat lai ghep
+
+#xac lai ghep cho ssa 
+pc1p: 0.4 #xac xuat lai 1 diem cat
+pc2p: 0.6 #xac xuat lai 2 diem cat
+
+#lai ghep cho n
+pBLX: 0.3 #xac xuat dung BLX
+pAMOX: 0.7 #xac xuat dung BLOX 
+
+sigma: 2 #phuong sai khi dot bien n vs gauss

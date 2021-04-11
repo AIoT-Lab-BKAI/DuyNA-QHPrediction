@@ -6,10 +6,12 @@ name = "pypi"
 [packages]
 scikit-learn = "*"
 matplotlib = "*"
-tensorflow = "*"
 pandas = "*"
 numpy = "*"
 PyYAML = "==5.4.1"
+Keras = "==2.4.3"
+tensorflow-gpu = "*"
+tensorflow = "*"
 
 [dev-packages]
 
