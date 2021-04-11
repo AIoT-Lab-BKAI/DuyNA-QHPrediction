@@ -112,5 +112,5 @@ if __name__ == '__main__':
     #         sigma_index_lst.append(i)
     # fitnesss = reward_func(sigma_index_lst=sigma_index_lst, default_n=20,
     #                        epoch_num=n, epoch_min=100, epoch_step=50)[0]
-    # print(fitness)
+    # print(fitnesss)
 # test2
