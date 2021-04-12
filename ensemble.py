@@ -226,6 +226,14 @@ class Ensemble:
         j = 0  # submodel index
 
         lst_epoch_size = get_epoch_size_list(self.epoch_num, self.epoch_min, self.epoch_step)
+        self.data = self.generate_data_kfold(sub_model_ind=j, max_sub_model=self.epoch_num)
+        self.data['sub_model'] = self.epoch_num  # so sub model
+
+        train_shape = self.data['y_test_in'].shape
+        test_shape = self.data['y_test_out'].shape
+
+        x_train_out = np.zeros(shape=(train_shape[0], self.target_timestep, step, train_shape[1]))
+        x_test_out = np.zeros(shape=(test_shape[0], self.target_timestep, step, test_shape[1]))
 
         if (self.mode == 'train' or self.mode == 'train-inner'):
             from model.models.en_de import train_model as ed_train
@@ -239,8 +247,8 @@ class Ensemble:
                 test_shape = self.data['y_test_out'].shape
                 # print(train_shape)
                 # print(test_shape)
-                x_train_out = np.zeros(shape=(train_shape[0], self.target_timestep, step, train_shape[1]))
-                x_test_out = np.zeros(shape=(test_shape[0], self.target_timestep, step, test_shape[1]))
+                # x_train_out = np.zeros(shape=(train_shape[0], self.target_timestep, step, train_shape[1]))
+                # x_test_out = np.zeros(shape=(test_shape[0], self.target_timestep, step, test_shape[1]))
 
                 # for epoch in range(self.epoch_min, self.epoch_max + 1, self.epoch_step):
                 self.inner_model.load_weights(self.log_dir + 'ModelPool/init_model.hdf5')
@@ -281,8 +289,6 @@ class Ensemble:
                 test_shape = self.data['y_test_out'].shape
                 # print(train_shape)
                 # print(test_shape)
-                x_train_out = np.zeros(shape=(train_shape[0], self.target_timestep, step, train_shape[1]))
-                x_test_out = np.zeros(shape=(test_shape[0], self.target_timestep, step, test_shape[1]))
 
                 # for epoch in range(self.epoch_min, self.epoch_max + 1, self.epoch_step):
                 if self.model_kind == 'rnn_cnn':
