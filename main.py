@@ -91,6 +91,7 @@ def sigma_init(sigma_input):
 
 
 if __name__ == '__main__':
+<<<<<<< HEAD
     os.environ['TF_FORCE_GPU_ALLOW_GROWTH'] = 'true'
     q = get_list_sigma_result()
     
@@ -113,4 +114,30 @@ if __name__ == '__main__':
     # fitnesss = reward_func(sigma_index_lst=sigma_index_lst, default_n=20,
     #                        epoch_num=n, epoch_min=100, epoch_step=50)[0]
     # print(fitnesss)
+=======
+    # os.environ['TF_FORCE_GPU_ALLOW_GROWTH'] = 'true'
+    # q = get_list_sigma_result()
+    # sumq = sum(q)
+    # sigma = []
+    # for i in q:
+    #     sigma.append(i / sumq)
+    # print("((((((((((((((((((   q   )))))))))))))))))))")
+    # print(q)
+    # print("(((((((((((((((((( sigma )))))))))))))))))))")
+    # print(sigma)
+    # pop = GA(sigma, fitness)
+    # pop.run()
+    import tensorflow as tf
+    tf.random.set_seed(9999)
+
+    gene = [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    n = 3
+    sigma_index_lst = []
+    for i in range(len(gene)):
+        if gene[i] == 1:
+            sigma_index_lst.append(i)
+    fitnesss = reward_func(sigma_index_lst=sigma_index_lst, default_n=20,
+                           epoch_num=n, epoch_min=100, epoch_step=50)[0]
+    print(fitnesss)
+>>>>>>> dca4ef2baff9fe241972d3cc64725dbeafb01fde
 # test2
