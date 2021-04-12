@@ -83,6 +83,8 @@ if __name__ == '__main__':
     # print(sigma)
     # pop = GA(sigma, fitness)
     # pop.run()
+    import tensorflow as tf
+    tf.random.set_seed(9999)
 
     gene = [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     n = 3

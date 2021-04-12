@@ -78,8 +78,10 @@ class Ensemble:
         self.sigma_lst = sigma_lst
         self.default_n = default_n
 
-        # self.data = self.generate_data()
-        self.data = {}
+        if self.mode == 'test':
+            self.data = self.generate_data()
+        else:
+            self.data = {}
         self.data['sub_model'] = self.epoch_num  # khoi tao so sub_model
         self.inner_model = self.build_model_inner()
         self.outer_model = self.build_model_outer()
@@ -213,7 +215,7 @@ class Ensemble:
     def train_model_inner(self):
 
         step = int((self.epoch_max - self.epoch_min) / self.epoch_step) + 1
-        print(self.data)
+        # print(self.data)
 
         # train_shape = self.data['y_test_in'].shape
         # test_shape = self.data['y_test_out'].shape
@@ -258,6 +260,7 @@ class Ensemble:
                                                       self.data['y_train_in'],
                                                       self.batch_size,
                                                       epoch,
+                                                      #   early_stop=True,
                                                       save_dir=self.log_dir + 'ModelPool/')
                 elif self.model_kind == 'en_de':
                     from model.models.en_de import train_model
