@@ -78,15 +78,16 @@ class Ensemble:
         self.sigma_lst = sigma_lst
         self.default_n = default_n
 
-        if self.mode == 'test':
-            self.data = self.generate_data()
-        else:
-            self.data = {}
-        self.data['sub_model'] = self.epoch_num  # khoi tao so sub_model
+        # if self.mode == 'test':
+        #     self.data = self.generate_data()
+        # else:
+        #     self.data = {}
+        self.data = self.generate_data_kfold(self.epoch_num)
+        # self.data['sub_model'] = self.epoch_num  # khoi tao so sub_model
         self.inner_model = self.build_model_inner()
         self.outer_model = self.build_model_outer()
 
-    def generate_data_kfold(self, sub_model_ind=0, max_sub_model=6):
+    def generate_data_kfold(self, max_sub_model=6):
         dat = get_input_data(self.data_file, self.default_n, self.sigma_lst)
         dat = dat.to_numpy()
 
@@ -97,11 +98,7 @@ class Ensemble:
         train_inner = int((dat.shape[0] - test_outer) * (1 - self.dt_split_point_inner))
 
         train_drop_len = int(train_inner / (max_sub_model * 2)) - 1
-        train_drop_start = train_drop_len * sub_model_ind
-        train_drop_end = train_drop_len * (sub_model_ind + 1)
-        print('hungvv - start - end')
-        print(train_drop_start)
-        print(train_drop_end)
+
         x, y, scaler, y_gt = extract_data(dataframe=dat,
                                           window_size=self.window_size,
                                           target_timstep=self.target_timestep,
@@ -109,16 +106,25 @@ class Ensemble:
                                           cols_y=self.cols_y,
                                           cols_gt=self.cols_gt,
                                           mode=self.norm_method)
+
+        x_train_in, y_train_in, y_gt_train_in = x[:train_inner, :], y[:train_inner, :], y_gt[:train_inner, :]
         x_test_out, y_test_out, y_gt_test_out = x[-test_outer:, :], y[-test_outer:, :], y_gt[-test_outer:, :]
         x_test_in, y_test_in, y_gt_test_in = x[train_inner:-test_outer,
                                                :], y[train_inner:-test_outer, :], y_gt[train_inner:-test_outer, :]
 
-        x_copy, y_copy, y_gt_copy = x[:train_inner, :].tolist().copy(
-        ), y[:train_inner, :].tolist().copy(), y_gt[:train_inner, :].tolist().copy()
-        del(x_copy[train_drop_start:train_drop_end])
-        del(y_copy[train_drop_start:train_drop_end])
-        del(y_gt_copy[train_drop_start:train_drop_end])
-        x_train_in, y_train_in, y_gt_train_in = np.array(x_copy), np.array(y_copy), np.array(y_gt_copy)
+        for sub_model_ind in range(max_sub_model):
+            train_drop_start = train_drop_len * sub_model_ind
+            train_drop_end = train_drop_len * (sub_model_ind + 1)
+
+            x_copy, y_copy, y_gt_copy = x_train_in.tolist().copy(
+            ), y_train_in.tolist().copy(), y_gt_train_in.tolist().copy()
+            del(x_copy[train_drop_start:train_drop_end])
+            del(y_copy[train_drop_start:train_drop_end])
+            del(y_gt_copy[train_drop_start:train_drop_end])
+            x_tmp, y_tmp, y_gt_tmp = np.array(x_copy), np.array(y_copy), np.array(y_gt_copy)
+            data["x_train_in_" + str(sub_model_ind)] = x_tmp
+            data["y_train_in_" + str(sub_model_ind)] = y_tmp
+            data["y_gt_train_in_" + str(sub_model_ind)] = y_gt_tmp
 
         for cat in ["train_in", "test_in", "test_out"]:
             x, y, y_gt = locals()["x_" + cat], locals()["y_" + cat], locals()["y_gt_" + cat]
@@ -213,38 +219,29 @@ class Ensemble:
         return model
 
     def train_model_inner(self):
-
-        step = int((self.epoch_max - self.epoch_min) / self.epoch_step) + 1
         # print(self.data)
-
-        # train_shape = self.data['y_test_in'].shape
-        # test_shape = self.data['y_test_out'].shape
-        # # print(train_shape)
-        # # print(test_shape)
-        # x_train_out = np.zeros(shape=(train_shape[0], self.target_timestep, step, train_shape[1]))
-        # x_test_out = np.zeros(shape=(test_shape[0], self.target_timestep, step, test_shape[1]))
-        j = 0  # submodel index
-
         lst_epoch_size = get_epoch_size_list(self.epoch_num, self.epoch_min, self.epoch_step)
-        self.data = self.generate_data_kfold(sub_model_ind=j, max_sub_model=self.epoch_num)
-        self.data['sub_model'] = self.epoch_num  # so sub model
+        # self.data = self.generate_data_kfold(sub_model_ind=j, max_sub_model=self.epoch_num)
+        # self.data['sub_model'] = self.epoch_num  # so sub model
 
         train_shape = self.data['y_test_in'].shape
         test_shape = self.data['y_test_out'].shape
 
-        x_train_out = np.zeros(shape=(train_shape[0], self.target_timestep, step, train_shape[1]))
-        x_test_out = np.zeros(shape=(test_shape[0], self.target_timestep, step, test_shape[1]))
+        x_train_out = np.zeros(shape=(train_shape[0], self.target_timestep, self.epoch_num, train_shape[1]))
+        x_test_out = np.zeros(shape=(test_shape[0], self.target_timestep, self.epoch_num, test_shape[1]))
+
+        j = 0  # submodel index
 
         if (self.mode == 'train' or self.mode == 'train-inner'):
             from model.models.en_de import train_model as ed_train
             for epoch in lst_epoch_size:
                 # voi moi epoch load data
                 # data = ...
-                self.data = self.generate_data_kfold(sub_model_ind=j, max_sub_model=self.epoch_num)
-                self.data['sub_model'] = self.epoch_num  # so sub model
+                # self.data = self.generate_data_kfold(sub_model_ind=j, max_sub_model=self.epoch_num)
+                # self.data['sub_model'] = self.epoch_num  # so sub model
 
-                train_shape = self.data['y_test_in'].shape
-                test_shape = self.data['y_test_out'].shape
+                # train_shape = self.data['y_test_in'].shape
+                # test_shape = self.data['y_test_out'].shape
                 # print(train_shape)
                 # print(test_shape)
                 # x_train_out = np.zeros(shape=(train_shape[0], self.target_timestep, step, train_shape[1]))
@@ -256,8 +253,8 @@ class Ensemble:
                 if self.model_kind == 'rnn_cnn':
                     from model.models.multi_rnn_cnn import train_model
                     self.inner_model, _ = train_model(self.inner_model,
-                                                      self.data['x_train_in'],
-                                                      self.data['y_train_in'],
+                                                      self.data['x_train_in_' + str(j)],
+                                                      self.data['y_train_in_' + str(j)],
                                                       self.batch_size,
                                                       epoch,
                                                       #   early_stop=True,
@@ -282,11 +279,11 @@ class Ensemble:
         else:
             for epoch in lst_epoch_size:
                 # load bo data tuong ung voi epoch
-                self.data = self.generate_data_kfold(sub_model_ind=j, max_sub_model=self.epoch_num)
-                self.data['sub_model'] = self.epoch_num  # so sub model
+                # self.data = self.generate_data_kfold(sub_model_ind=j, max_sub_model=self.epoch_num)
+                # self.data['sub_model'] = self.epoch_num  # so sub model
 
-                train_shape = self.data['y_test_in'].shape
-                test_shape = self.data['y_test_out'].shape
+                # train_shape = self.data['y_test_in'].shape
+                # test_shape = self.data['y_test_out'].shape
                 # print(train_shape)
                 # print(test_shape)
 
@@ -346,7 +343,7 @@ class Ensemble:
         in_shape = self.data['x_train_out'].shape
         print(f'Input shape: {in_shape}')
 
-        input_submodel = Input(shape=(self.target_timestep, self.output_dim * self.data['sub_model']))
+        input_submodel = Input(shape=(self.target_timestep, self.output_dim * self.epoch_num))
         input_val_x = Input(shape=(self.window_size, self.input_dim))
 
         rnn_1 = Bidirectional(
