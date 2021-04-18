@@ -22,4 +22,4 @@ pc2p: 0.6 #xac xuat lai 2 diem cat
 pBLX: 0.3 #xac xuat dung BLX
 pAMOX: 0.7 #xac xuat dung BLOX 
 
-sigma: 1 #phuong sai khi dot bien n vs gauss
+sigma: 2 #phuong sai khi dot bien n vs gauss
