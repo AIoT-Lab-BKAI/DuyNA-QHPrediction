@@ -93,7 +93,7 @@ class Population:
 
             for x in self.pop:
                 x.write_file(file_name,'a+')
-        self.get_best(self.k)  
+        self.get_best()  
         
       
     
@@ -246,12 +246,12 @@ class Population:
         return [child]
     
     
-    def get_best(self,i):
-        best = open("log/ga/best.txt","a+")
-        best.write(str(i)+" :: ")
-        best.write(self.pop[0].__str__())
-        best.write('\n')
-        best.close()
+    def get_best(self):
+        self.pop[0].write_file("log/ga/best.txt","a+")
+
+
+
+
 
     def selection(self):
         popsorted = sorted(self.pop, key= lambda x : x.value_fitness)
