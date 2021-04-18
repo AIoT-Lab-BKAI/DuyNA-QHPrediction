@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "839f10fa08081d93f33b2d36d0315dc7258a478c1dec7e40fefd4ff651a7d099"
+            "sha256": "d60b227f795d91aa16096bbb9bf0fa6d8d562c43c04f271a1ece66efbf3330b7"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -85,11 +85,11 @@
         },
         "google-auth-oauthlib": {
             "hashes": [
-                "sha256:54431535309cfab50897d9c181e8c2226268825aa6e42e930b05b99c5041a18c",
-                "sha256:dabffbf594a6be2fd6d054060846d1201569252efb10dfb749b504a7591f8af0"
+                "sha256:09832c6e75032f93818edf1affe4746121d640c625a5bef9b5c96af676e98eee",
+                "sha256:0e92aacacfb94978de3b7972cf4b0f204c3cd206f74ddd0dc0b31e91164e6317"
             ],
             "markers": "python_version >= '3.6'",
-            "version": "==0.4.3"
+            "version": "==0.4.4"
         },
         "google-pasta": {
             "hashes": [
@@ -192,6 +192,14 @@
             ],
             "markers": "python_version >= '3.6'",
             "version": "==1.0.1"
+        },
+        "keras": {
+            "hashes": [
+                "sha256:05e2faf6885f7899482a7d18fc00ba9655fe2c9296a35ad96949a07a9c27d1bb",
+                "sha256:fedd729b52572fb108a98e3d97e1bac10a81d3917d2103cc20ab2a5f03beb973"
+            ],
+            "index": "pypi",
+            "version": "==2.4.3"
         },
         "keras-preprocessing": {
             "hashes": [
@@ -636,6 +644,18 @@
                 "sha256:5b7b7bf2debe19a8794adacc43e8ba6459daa4efaf54d3302623994a359b17f0"
             ],
             "version": "==2.4.0"
+        },
+        "tensorflow-gpu": {
+            "hashes": [
+                "sha256:255d65a2d6e308fc67e3b27bcc836fcaec0e49b0b952fbd12359e9daa8ec9b13",
+                "sha256:2e96d2f31efda380ad0308da526dac67e899224fbd94eb6d44547a1668368fd4",
+                "sha256:639826f4f608a7f383895f8ba05eb97aab52d6039a8f1681ffd010c9838bfaaf",
+                "sha256:acf843b626cb2a38ee0182b9c3b799e6cc96f158505e504698b7006bb30bd88a",
+                "sha256:b5caa32b327ea54ce8bd3669136a401b5d31305c23322960ac057a96330f1d7b",
+                "sha256:e22fbd46149edfff805fd86c808665c2638f45b70d80b6d7950047bb08fdb801"
+            ],
+            "index": "pypi",
+            "version": "==2.4.1"
         },
         "termcolor": {
             "hashes": [

@@ -13,7 +13,10 @@ class Population:
     pAMOX = config['pAMOX']
     sm =config['sigma']
     pmx = config['pmx']
+    pmi2 = config['pmi2']
     file_name = config['populationInit']
+    pselection = config['selection']
+
     def __init__(self, size, sigma,f):
         self.sigma = sigma
         self.size = size
@@ -50,50 +53,49 @@ class Population:
                 ind = Individual(sigma)
 
                 print('----------khoi tao con thu i: ',i,">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
-                print("-->")
-           
+                print("-->")           
                 f2 = open("log/ga/runtime.txt","a+")
                 f2.seek(0,2)
                 f2.write("bat dau khoi tao: \n")
                 f2.write(ind.__str__())
-                f2.write("\n")
                 f2.close()
-
                 print(ind)
-           
                 print("-->")
                 print("-->")
             
                 ind.value_fitness = self.fitness(ind)
                 ind.time = datetime.datetime.now(pytz.timezone('Asia/Ho_Chi_Minh'))
+                self.pop.append(ind)
+                
                 f2 = open("log/ga/runtime.txt","a+")
                 f2.seek(0,2)
                 f2.write("khoi tao xong: \n")
                 f2.write(ind.__str__())
                 f2.write("\n")
                 f2.close()
-           
                 f0 = open("log/ga/init.txt","a+")
                 f0.seek(0,2)
-                f0.write("\n")
                 f0.write(ind.__str__())
                 f0.write("\n")
                 f0.close()
-           
                 print("----------------<<>><><<<<<<<<<<<<<<<<<<<<<<<>..................>>>>>>>-----------------------------------")            
                 print(ind)
                 print("--")
-                self.pop.append(ind)
-                
+
+            self.pop = sorted(self.pop, key= lambda x : x.value_fitness)   
+            
+
             file_name="log/ga/population0.txt"
             fi = open(file_name,'w+')
             fi.write("0")
             fi.write('\n')
             fi.close()
+
             for x in self.pop:
                 x.write_file(file_name,'a+')
-
+        self.get_best(self.k)  
         
+      
     
     def  crossover_one_point(self, parent1, parent2):
         n1 = random.randint(1,len(parent1)-1)
@@ -195,9 +197,12 @@ class Population:
         f2.seek(0,2)
         f2.write("Dot bien: \n")
         f2.close()
+
+
         parent1 = ind.genes
         child1 = [ i for i in parent1]
-        if random.random() < Population.pmx:
+        pmm = random.random()
+        if pmm < Population.pmx:
             s = 0
             for i in range(len(parent1)):
                 s += (1-self.sigma[i], self.sigma[i])[parent1[i] == 0] 
@@ -208,9 +213,21 @@ class Population:
                     child1[i] = 1 - child1[i]
                     break
                 a += (1-self.sigma[i], self.sigma[i])[parent1[i] == 0]
+        elif pmm < Population.pmi2 + Population.pmx:
+            n1 = random.randint(0, len(parent1) -1 )
+            n2 = random.randint(0, len(parent1) -1 )
+            while n1 == n2:
+                n2 = random.randint(0, len(parent1) -1)
+            if n1 > n2:
+                n1, n2 = n2, n1
+            for j in range(n1, n2+1):
+                child1[j] = 1- parent1[j]
+
         else :
             k = random.randint(0 ,len(parent1)-1)
             child1[k] = 1 - child1[k]
+        
+        
         child = Individual(self.sigma)
         child.set_genes(child1)
         child.set_n(int(random.gauss(ind.n, Population.sm)))
@@ -224,18 +241,29 @@ class Population:
         f2.write(child.__str__())
         f2.write("\n----------------\n")
         f2.close()
+
+
         return [child]
     
     
-    def get_best(self):
-        max_value_fitness = 0
-        for i in range(self.size):
-            if max_value_fitness < self.pop[i].value_fitness:
-                max_value_fitness = self.pop[i].value_fitness
-        for i in range(self.size):
-            if self.pop[i].value_fitness == max_value_fitness:
-                return self.pop[i]
-    
+    def get_best(self,i):
+        best = open("log/ga/best.txt","a+")
+        best.write(str(i)+" :: ")
+        best.write(self.pop[0].__str__())
+        best.write('\n')
+        best.close()
+
     def selection(self):
-        self.pop = sorted(self.pop, key= lambda x : x.value_fitness)
-        self.pop = self.pop[0:self.size]
+        popsorted = sorted(self.pop, key= lambda x : x.value_fitness)
+        popchild  = popsorted[0:int(self.size*Population.pselection)]
+
+        k = 0;
+        while k < self.size*(1- Population.pselection):
+            a = random.randint(self.size*Population.pselection, self.size*2-1 )
+            b = random.randint(self.size*Population.pselection, self.size*2-1 )
+            while a == b:
+                b = random.randint(self.size*Population.pselection, self.size*2-1 )
+            c = min(a,b)
+            popchild.append(popsorted[c])
+            k+=1
+        self.pop = sorted(popchild, key= lambda x : x.value_fitness)

@@ -9,6 +9,7 @@ from ga.GA import GA
 from ga.Individual import Individual
 import numpy as np
 import os
+import math
 if sys.version_info[0] < 3:
     raise Exception("Python 3 or a more recent version is required.")
 
@@ -70,17 +71,31 @@ def fitness(ind):
     return fitnesss
 
 
+def sigma_init(sigma_input):
+    tmp = []
+    output_lst = []
+    for x in sigma_input:
+        tmp.append(float(math.log(x,2)-10))
+    tmp_sum = sum(tmp)
+    for j in tmp:
+        output_lst.append(j/tmp_sum)
+    print(output_lst)
+    return output_lst
+
+
+
+
 if __name__ == '__main__':
     os.environ['TF_FORCE_GPU_ALLOW_GROWTH'] = 'true'
     q = get_list_sigma_result()
-    sumq = sum(q)
-    sigma = []
-    for i in q:
-        sigma.append(i / sumq)
+    
+    sigma = sigma_init(q)
+    
     print("((((((((((((((((((   q   )))))))))))))))))))")
     print(q)
     print("(((((((((((((((((( sigma )))))))))))))))))))")
     print(sigma)
+    
     pop = GA(sigma, fitness)
     pop.run()
 
