@@ -1,5 +1,5 @@
 #kich thuoc quan the  va so luong vong lap
-SIZE_POPULATION: 100
+SIZE_POPULATION: 50
 CONDITION_STOP: 30
 
 populationInit: 'None'
