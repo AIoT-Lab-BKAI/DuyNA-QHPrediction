@@ -1,6 +1,6 @@
 #kich thuoc quan the  va so luong vong lap
-SIZE_POPULATION: 50
-CONDITION_STOP: 30
+SIZE_POPULATION: 100
+CONDITION_STOP: 15
 
 populationInit: 'None'
 #khoitao

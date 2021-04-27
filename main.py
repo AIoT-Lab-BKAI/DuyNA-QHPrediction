@@ -74,13 +74,12 @@ def fitness(ind):
 def sigma_init(sigma_input):
     tmp = []
     output_lst = []
-    for x in sigma_input:
-        tmp.append(float(math.log(x,2)-10))
-    tmp_sum = sum(tmp)
-    for j in tmp:
-        output_lst.append(j/tmp_sum)
+    input_sum = sum(sigma_input)
+    for j in sigma_input:
+        output_lst.append(j/input_sum)
     print(output_lst)
     return output_lst
+
 
 
 
