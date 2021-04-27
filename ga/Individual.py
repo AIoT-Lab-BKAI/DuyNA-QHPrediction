@@ -42,7 +42,7 @@ class Individual:
         s=''
         for i in self.genes:
             s +=  str(i) + ' '
-        s += str(self.n) + ' '+ str(self.value_fitness)
+        s += str(self.n) + ' '+ str(self.value_fitness)+' '+str(datetime.datetime.now(pytz.timezone('Asia/Ho_Chi_Minh')))
         f = open(file_name,t)
         f.seek(0,2)
         f.write(s)
