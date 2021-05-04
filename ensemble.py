@@ -395,7 +395,7 @@ class Ensemble:
         print(f'GTRUTH SHAPE: {gtruth.shape}')
         return result, gtruth
 
-    def retransform_prediction(self, mode=''):
+    def retransform_prediction(self, mode='', flag=''):
         if mode == '':
             result = self.predict_and_plot()
         else:
@@ -431,8 +431,10 @@ class Ensemble:
 
             print('SAVING CSV...')
             total_frame.to_csv('./log/data_analysis/predict_val_{}.csv'.format(i), index=None)
+            if flag == 'day1':
+                break
 
-    def evaluate_model(self, mode=''):
+    def evaluate_model(self, mode='', flag=''):
         from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 
         # actual_dat = self.data['y_test_out']
@@ -454,6 +456,8 @@ class Ensemble:
             item_df['mae_h'] = mean_absolute_error(actual_dat.iloc[:, 1], actual_pre.iloc[:, 1])
             item_df['mape_h'] = mean_absolute_percentage_error(actual_dat.iloc[:, 1], actual_pre.iloc[:, 1])
             lst_data.append(item_df)
+            if flag == 'day1':
+                return item_df['mse_q'], item_df['mse_h']
         eval_df = pd.DataFrame(
             data=lst_data,
             columns=['var_score_q', 'mse_q', 'mae_q', 'mape_q', 'var_score_h', 'mse_h', 'mae_h', 'mape_h'])

@@ -55,8 +55,8 @@ def reward_func(sigma_index_lst=[1, 2, 3], default_n=20, epoch_num=4, epoch_min=
     model = Ensemble(mode='test', model_kind='rnn_cnn', sigma_lst=sigma_index_lst,
                      default_n=default_n, epoch_num=epoch_num, epoch_min=epoch_min, epoch_step=epoch_step, **config)
     model.train_model_outer()
-    model.retransform_prediction(mode='roll')
-    return model.evaluate_model(mode='roll')
+    model.retransform_prediction(mode='roll', flag='day1')
+    return model.evaluate_model(mode='roll', flag='day1')
 
 
 def fitness(ind):
@@ -76,25 +76,22 @@ def sigma_init(sigma_input):
     output_lst = []
     input_sum = sum(sigma_input)
     for j in sigma_input:
-        output_lst.append(j/input_sum)
+        output_lst.append(j / input_sum)
     print(output_lst)
     return output_lst
-
-
-
 
 
 if __name__ == '__main__':
     os.environ['TF_FORCE_GPU_ALLOW_GROWTH'] = 'true'
     q = get_list_sigma_result()
-    
+
     sigma = sigma_init(q)
-    
+
     print("((((((((((((((((((   q   )))))))))))))))))))")
     print(q)
     print("(((((((((((((((((( sigma )))))))))))))))))))")
     print(sigma)
-    
+
     pop = GA(sigma, fitness)
     pop.run()
 
@@ -106,5 +103,5 @@ if __name__ == '__main__':
     #         sigma_index_lst.append(i)
     # fitnesss = reward_func(sigma_index_lst=sigma_index_lst, default_n=20,
     #                        epoch_num=n, epoch_min=100, epoch_step=50)[0]
-    # print(fitness)
-# test2
+    # print(fitnesss)
+    # test2
